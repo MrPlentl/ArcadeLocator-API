@@ -1,0 +1,14 @@
+'use strict';
+
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const apiSpec = join(__dirname, 'specification/api.yaml');
+
+export default {
+    apiSpec,
+    validateResponses: true, // default false
+    // The base path to the operation handlers directory
+    operationHandlers: join(__dirname, 'routes'), // default false
+};

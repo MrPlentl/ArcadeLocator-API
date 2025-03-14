@@ -1,0 +1,57 @@
+{
+  "name": "arcadelocator-api",
+  "version": "0.0.1",
+  "description": "Discover new arcades nearby, see what games that have and checkout what options they have available",
+  "keywords": [
+    "arcade",
+    "video games",
+    "zipcode search",
+    "locator",
+    "arcade information"
+  ],
+  "author": "R. Brandon Plentl <bplentl@gmail.com> (http://mrplentl.com)",
+  "homepage": "https://github.com/MrPlentl/ArcadeLocator-API/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/MrPlentl/ArcadeLocator-API/issues",
+    "email": "bplentl@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:MrPlentl/ArcadeLocator-API"
+  },
+  "license": "GPL-3.0",
+  "main": "./src/app.js",
+  "engines": {
+    "node": "^22.x"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "inspect": "nodemon --inspect ./src/app.js",
+    "setversion": "git rev-list --count --all > version",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-openapi-validator": "^5.4.6",
+    "express-rate-limit": "^7.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "log4js": "^6.9.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.6",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "eslint": "^9.21.0",
+    "globals": "^16.0.0",
+    "nodemon": "^3.1.9",
+    "sequelize-cli": "^6.6.2"
+  }
+}

@@ -1,0 +1,10 @@
+{
+    "verbose": true,
+    "watch": [
+        "./src"
+    ],
+    "events": {
+        "start": "cls || clear"
+    },
+    "ext": ".js, .json, .yaml"
+}
