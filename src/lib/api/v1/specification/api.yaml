@@ -31,6 +31,8 @@ tags:
     description: Core Operations of the Arcade Locator API
   - name: extras
     description: Extra data
+  - name: authentication
+    description: Authentication endpoints for various tasks
   - name: definitions
     description: Operations about user
   - name: pet
@@ -364,11 +366,25 @@ paths:
                   error:
                     type: string
                     description: Error Message
-  /apikey:
+  /apikey/{userId}:
     post:
+      tags:
+        - authentication
+      summary: Create a new ApiKey with User ID
       description: Incoming request to create an Api Key using an apiKey
+      operationId: createApiKey
       x-eov-operation-id: createApiKey
       x-eov-operation-handler: auth
+      parameters:
+        - name: userId
+          in: path
+          description: User ID to use to assign the new ApiKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+            maximum: 32767
+            minimum: 1
       responses:
         200:
           description: OK
@@ -384,6 +400,16 @@ paths:
                     description: Error Message
         401:
           description: The apiKey is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error Message
+        500:
+          description: Error while trying to add the new Apikey into the table
           content:
             application/json:
               schema:
@@ -419,48 +445,6 @@ paths:
                   name:
                     type: string
                     description: The user name.
-  /ping:
-    get:
-      description: |
-        ping then pong!
-      # OpenAPI's operationId may be used to specify the operation id
-      # operationId: ping
-      # x-eov-operation-id may be used to specify the operation id
-      # Used when operationId is omitted. Overrides operationId when both are specified
-      x-eov-operation-id: getPing
-      # specifies the path to the operation handler.
-      # the path is relative to the operationHandlers option
-      # e.g. operations/base/path/routes/ping.js
-      x-eov-operation-handler: ping
-      responses:
-        "200":
-          description: OK
-        "401":
-          description: Auth Failure
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error Message
-  /pong:
-    get:
-      description: |
-        pong then ping!
-      # OpenAPI's operationId may be used to specify the operation id
-      # operationId: pong
-      # x-eov-operation-id may be used to specify the operation id
-      # Used when operationId is omitted. Overrides operationId when both are specified
-      x-eov-operation-id: pong
-      # specifies the path to the operation handler.
-      # the path is relative to the operationHandlers option
-      # e.g. operations/base/path/routes/ping.js
-      x-eov-operation-handler: index
-      responses:
-        "200":
-          description: OK
   /shows:
     get:
       description: |

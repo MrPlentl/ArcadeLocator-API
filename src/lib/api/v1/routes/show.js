@@ -1,5 +1,5 @@
 import env from "../../../utils/environment.js";
-import { exampleMiddleware, authenticateToken, setStdRespHeaders } from "../middleware/index.js";
+import { setStdRespHeaders } from "../middleware/index.js";
 import pkg from 'pg';
 const { Pool } = pkg;
 
@@ -31,9 +31,7 @@ const getShows = async (req, res) => {
 
 export default {
     getShows: [
-        exampleMiddleware,
         setStdRespHeaders,
-        authenticateToken,
         getShows
     ]
 };

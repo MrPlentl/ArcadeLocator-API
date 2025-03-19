@@ -1,4 +1,4 @@
-import { exampleMiddleware, authenticateToken, setStdRespHeaders } from "../middleware/index.js";
+import { exampleMiddleware, setStdRespHeaders } from "../middleware/index.js";
 
 const getPing = (req, res) => { 
     console.log("PING JS -> WORKING PING NEW!");
@@ -9,7 +9,6 @@ export default {
     getPing: [
         exampleMiddleware,
         setStdRespHeaders,
-        authenticateToken,
         getPing
     ]
 };

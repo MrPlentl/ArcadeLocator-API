@@ -34,7 +34,8 @@
 
 // exists(id) → Returns true if a record exists.
 // findOrCreate(data) → Retrieves a record if it exists or creates it if not.
-
+import { predefinedError } from "../../api/utilities/errors/handlers.js";
+import { __functionName } from "../../api/utilities/helpers.js";
 import { log4js } from "../../../utils/log4js.js";
 const logger = log4js.getLogger("[models|Apikey]"); // Sets up the logger with the [app] string prefix
 
@@ -50,27 +51,16 @@ class Apikey {
    */
   static async create(newApiKey) {
     try {
-        if (!newApiKey?.lookup_hash) {
-            throw ("Api 'lookup_hash' is required");
-        };
-
-        if (!newApiKey?.hashed_key) {
-            throw ("Api 'hashed_key' is required");
-        }
-
-        logger.debug("newApiKey");
-        logger.debug(newApiKey);
-        logger.debug(newApiKey.lookup_hash);
-        logger.debug(newApiKey.hashed_key);
+        if (!newApiKey?.lookup_hash) { throw ("Api 'lookup_hash' is required"); };
+        if (!newApiKey?.hashed_key) { throw ("Api 'hashed_key' is required"); }
 
         const { rows } = await pool.query(
             "INSERT INTO apikey (lookup_hash, hashed_key) VALUES ($1, $2) RETURNING *",
             [newApiKey.lookup_hash, newApiKey.hashed_key]
         );
         return rows[0];
-      } catch (error) {
-        logger.error("SQL Error in create:", error);
-        throw {status: "Error", message: `${error}. Please try again later and contact Support if the problem presists.`};
+      } catch (errorMessage) {
+        logger.error("SQL Error in create:", errorMessage);
       }
   }
 
@@ -102,12 +92,11 @@ class Apikey {
   static async getByLookupHash(lookupHash) {
     logger.trace("getByLookupHash:", lookupHash);
     try {
-      // @TODO: need to add an expiration check here
-      const { rows } = await pool.query(`SELECT id, hashed_key FROM apikey WHERE lookup_hash = $1`, [lookupHash]);
+      const { rows } = await pool.query(`SELECT id, hashed_key, expires_at FROM apikey WHERE lookup_hash = $1`, [lookupHash]);
       return rows[0] || null; // Returns null if no records are found
     } catch (error) {
       logger.error("SQL Error in getByLookupHash:", error);
-      throw {status: "Error", message: `An error occured while fetching the apikey with lookup_hash: ${lookupHash}. Please try again later and contact Support if the problem presists.`};
+      throw predefinedError(__functionName());
     }
   }
 

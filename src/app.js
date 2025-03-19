@@ -113,7 +113,7 @@ app.use(serverRequestLog('dev')); // Logs to console in 'dev' format
 // See api.yaml for x-eov-* vendor extensions
 app.use( eov.middleware(apiV1) );
 
-// @TODO: I have no idea what is happening here
+// @TODO I have no idea what is happening here
 // Create a custom error handler
 app.use((err, req, res, next) => {
   // format errors

@@ -1,5 +1,6 @@
 // import env from "../../../utils/environment.js";
-import { exampleMiddleware, authenticateToken, setStdRespHeaders } from "../middleware/index.js";
+import { authenticateToken } from "../middleware/auth.js";
+import { setStdRespHeaders } from "../middleware/index.js";
 import * as controller from '../controller/movie.js';
 
 import { log4js } from "../../../../utils/log4js.js";
@@ -35,6 +36,10 @@ const createMovie = async (req, res) => {
  */
 const getMovies = async (req, res) => {
     logger.trace("getMovies");
+    
+    logger.debug(req?.userToken?.permissions?.apiKey?.canCreate);
+    logger.debug(req?.userToken?.role);
+    logger.debug(req?.userToken?.userAccess?.accessLevel);
     const [ statusCode, response ] = await controller.fetchAllMovies(req);
     return res.status(statusCode).send(JSON.stringify(response));
 }
@@ -86,31 +91,26 @@ const deleteMovie = async (req, res) => {
 
 export default {
     getMovies: [
-        exampleMiddleware,
         setStdRespHeaders,
         authenticateToken,
         getMovies
     ],
     getMovieById: [
-        exampleMiddleware,
         setStdRespHeaders,
         authenticateToken,
         getMovieById
     ],
     updateMovieInfo: [
-        exampleMiddleware,
         setStdRespHeaders,
         authenticateToken,
         updateMovieInfo
     ],
     createMovie: [
-        exampleMiddleware,
         setStdRespHeaders,
         authenticateToken,
         createMovie
     ],
     deleteMovie: [
-        exampleMiddleware,
         setStdRespHeaders,
         authenticateToken,
         deleteMovie
