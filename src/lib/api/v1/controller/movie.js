@@ -1,8 +1,33 @@
 // import env from "../../../utils/environment.js";
 import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[controller|movie]"); // Sets up the logger with the [app] string prefix
+import { formatErrorResponse, sqlError } from '../../utilities/error.js';
 
 import Movie from "../../../database/models/Movie.class.js";
+
+/**
+ * CREATE a new Movie
+ * 
+ * @param {*} req 
+ * @returns 
+ */
+export async function createNewMovie(req) {
+  logger.trace("createNewMovie:", req?.body?.name);
+  const data = req?.body;
+  // VALIDATE DATA HERE
+  try {
+      const response = await Movie.create(data) || {};
+      return [ 200, response ];
+  } catch (error) {
+    logger.error("SQL Error in Movie.create:", error.message);
+    error.httpStatusCode = 400;
+    let msg = 'An error occured while creating a new Movie. Check the details and please try again. Contact Support if the problem presists.';
+    if (error.code == 23505){
+      msg = 'Duplicate Movie Detected: A movie already exists with that name and year. Check the details and please try again. Contact Support if the problem presists.';
+    };
+    return formatErrorResponse(sqlError(error, msg));
+  }
+};
 
 /**
  * FETCH All Movies
@@ -16,8 +41,9 @@ export async function fetchAllMovies(req) {
     try {
       return [ 200, await Movie.getAll(orderBy) ];
     } catch (error) {
-        logger.error(`${error.status}: ${error.message}`);
-        return [ 404, error ];
+      logger.error("SQL Error in Movie.getAll:", error.message);
+      const msg = 'An error occured while fetching movies. Please try again later and contact Support if the problem presists.';
+      return formatErrorResponse(sqlError(error, msg));
     }
 };
 
@@ -34,8 +60,9 @@ export async function fetchMovieById(req) {
         const response = await Movie.getById(id) || {};
         return [ 200, response ];
     } catch (error) {
-      logger.error(`${error.status}: ${error.message}`);
-      return [ 404, error ];
+      logger.error("SQL Error in Movie.getById:", error.message);
+      const msg = `An error occured while fetching the movie with id: ${id}. Please try again later and contact Support if the problem presists.`;
+      return formatErrorResponse(sqlError(error, msg));
     }
 };
 
@@ -49,13 +76,18 @@ export async function updateMovieById(req) {
     logger.trace("updateMovieById:", req?.params?.movieId);
     const id = req?.params?.movieId || 99;
     const data = req?.body;
-    // VALIDATE DATA HERE
+
     try {
         const response = await Movie.update(id, data) || {};
         return [ 200, response ];
     } catch (error) {
-      logger.error(`${error.status}: ${error.message}`);
-      return [ 404, error ];
+      logger.error("SQL Error in Movie.update:", error.message);
+      error.httpStatusCode = 400;
+      let msg = 'An error occured while creating a new Movie. Check the details and please try again. Contact Support if the problem presists.';
+      if (error.code == 23505){
+        msg = 'Duplicate Movie Detected: A movie already exists with that name and year. Check the details and please try again. Contact Support if the problem presists.';
+      };
+      return formatErrorResponse(sqlError(error, msg));
     }
 };
 
@@ -72,26 +104,9 @@ export async function deleteMovieById(req) {
     const response = await Movie.delete(id);
     return [ 204, response ];
   } catch (error) {
-    logger.error(`${error.status}: ${error.message}`);
-    return [ 404, error ];
+    logger.error("SQL Error in Movie.delete:", error.message);
+    error.httpStatusCode = 404;
+    const msg = 'Error Deleting movie';
+    return formatErrorResponse(sqlError(error, msg));
   }
-};
-
-/**
- * CREATE a new Movie
- * 
- * @param {*} req 
- * @returns 
- */
-export async function createNewMovie(req) {
-    logger.trace("createNewMovie:", req?.body?.name);
-    const data = req?.body;
-    // VALIDATE DATA HERE
-    try {
-        const response = await Movie.create(data) || {};
-        return [ 200, response ];
-    } catch (error) {
-      logger.error(`${error.status}: ${error.message}`);
-      return [ 404, error ];
-    }
 };
