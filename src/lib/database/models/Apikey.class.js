@@ -1,46 +1,7 @@
-// CRUD Methods
-// These methods perform fundamental operations on the database.
-
-// Create:
-// create(data) → Inserts a new record into the database.
-
-// Update:
-// update(id, data) → Updates an existing record.
-
-// Delete:
-// delete(id) → Removes a record from the database.
-
-// Read
-// getAll() → Retrieves all records.
-// getById(id) → Fetches a single record by its primary key.
-
-// -----------------------
-// findOne(condition) → Fetches a single record based on a condition.
-// findAll(condition) → Retrieves multiple records based on a condition.
-
-// Filtering & Searching:
-// findByName(name) → Retrieves records that match a given name.
-// findByYear(year) → Retrieves movies from a specific year.
-// search(query) → Performs a search on multiple fields.
-// Aggregation & Counting:
-
-// count() → Returns the total number of records.
-// countByCondition(condition) → Counts records matching a condition.
-// Sorting & Pagination:
-
-// getSorted(column, order = 'ASC') → Fetches records sorted by a column.
-// paginate(limit, offset) → Retrieves a paginated subset of records.
-// Existence Checks:
-
-// exists(id) → Returns true if a record exists.
-// findOrCreate(data) → Retrieves a record if it exists or creates it if not.
-import { predefinedError } from "../../api/utilities/errors/handlers.js";
-import { __functionName } from "../../api/utilities/helpers.js";
 import { log4js } from "../../../utils/log4js.js";
 const logger = log4js.getLogger("[models|Apikey]"); // Sets up the logger with the [app] string prefix
 
-// @TODO: Update this connection file location 
-import pool from "../db.js";
+import pool from "../connectors/postgres.js";
 
 class Apikey {
   // CREATE
@@ -59,8 +20,9 @@ class Apikey {
             [newApiKey.lookup_hash, newApiKey.hashed_key]
         );
         return rows[0];
-      } catch (errorMessage) {
-        logger.error("SQL Error in create:", errorMessage);
+      } catch (error) {
+        logger.error("SQL Error in create:", error);
+        throw error;
       }
   }
 
@@ -77,7 +39,7 @@ class Apikey {
 //     }
 //   }
   
-  // Returns Movie matching the id
+  // Returns Apikey matching the id
   static async getById(id) {
     logger.trace("getById:", id);
     try {
@@ -85,7 +47,7 @@ class Apikey {
       return rows[0] || null; // Returns null if no records are found
     } catch (error) {
       logger.error("SQL Error in getById:", error);
-      throw {status: "Error", message: `An error occured while fetching the apikey with id: ${id}. Please try again later and contact Support if the problem presists.`};
+      throw error;
     }
   }
   // Returns Movie matching the id
@@ -96,7 +58,7 @@ class Apikey {
       return rows[0] || null; // Returns null if no records are found
     } catch (error) {
       logger.error("SQL Error in getByLookupHash:", error);
-      throw predefinedError(__functionName());
+      throw error;
     }
   }
 
