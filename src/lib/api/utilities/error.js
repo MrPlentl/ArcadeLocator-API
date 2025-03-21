@@ -6,7 +6,16 @@ const logger = log4js.getLogger("[utilities|error]"); // Sets up the logger with
 const errors = JSON.parse(readFileSync("./src/lib/api/utilities/errors/errors.json", "utf-8"));
 
 export function predefinedError(errorName) {
-    return(errors[errorName]);
+    const err = new Error();
+    if (errors[errorName]) {
+        Object.entries(errors[errorName]).forEach(([key, value]) => {
+            err[key] = value;
+        });
+    } else {
+        err.message = `Unknown Error: ${errorName}`;
+    }
+
+    return(err);
 };
 
 export function handleError(message, error = 400) {
@@ -26,7 +35,7 @@ export function handleError(message, error = 400) {
 //      Object.assign(newError, { type: "Bad Request", message: "New Message", code: 77702, httpStatusCode: 401 });
 // throw newError;
 
-export function errorResponse(error) {
+export function formatErrorResponse(error) {
     if (typeof error === 'string') { error = new Error (error); }
 
     const statusCode = error?.httpStatusCode ?? 500;
@@ -42,3 +51,10 @@ export function errorResponse(error) {
     logger.error(`[${statusCode}] ${errorResp.error.type}: ${errorResp.error.message}`);
     return [ statusCode, errorResp ];
 };
+
+export function sqlError(error, msg='Undefined') {
+    error.type = "SQL Error";
+    error.details = {sql_error: error.message};
+    error.message = msg;
+    return error;
+}

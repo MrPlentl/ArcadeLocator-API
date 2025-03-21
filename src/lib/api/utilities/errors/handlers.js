@@ -15,7 +15,6 @@ export function handleErrorMessage(message, errorCode) {
     return(errorMessage);
 };
 
-
 // export const __functionName = () => {
 //     // const stackLine = (new Error().stack.split("\n")[2].trim()).split("at ")[1].split(" (")[0];
 //     // const functionName = stackLine.split("at ")[1].split(" (")[0];

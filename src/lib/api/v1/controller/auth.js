@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from "uuid";
 import env from '../../../utils/environment.js';
-import { errorResponse, predefinedError } from '../../utilities/error.js';
+import { formatErrorResponse, predefinedError } from '../../utilities/error.js';
 import { getClientIP } from '../../utilities/helpers.js';
 import * as handler from './handlers/auth.js';
 // import { __functionName } from '../../utilities/helpers.js';
@@ -13,10 +13,8 @@ import Apikey from "../../../database/models/Apikey.class.js";
 import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[controller|auth]"); // Sets up the logger with the [app] string prefix
 
-
 /**
  * Generates a new ApiKey and stores the Hashed Key and a Lookup Hash for retreival 
- * [ Route Controller ]
  * 
  * @param {*} req The HTTP Request object
  * @returns [httpStatucCode, access_token]
@@ -38,16 +36,17 @@ export async function generateApiKey(userId) {
             return [ 200, { apiKey } ];
         }
 
-        throw new Error("Internal Error: Unable to create API Key at this time.");
+        // throw new Error("Internal Error: Unable to create API Key at this time.");
 
-    } catch (error) {        
-        return errorResponse(error);
+    } catch (error) {
+        error.details = {sql_error: error.message}
+        error.message = "Internal Error: Unable to create API Key at this time.";
+        return formatErrorResponse(error);
     }
 };
 
 /**
  * Create an Access Token for the user to authenticate with
- * [ Route Controller ]
  * 
  * @param {*} req The HTTP Request object
  * @returns [httpStatucCode, access_token]
@@ -126,6 +125,6 @@ export async function fetchAccessToken(req) {
         } ];
 
     } catch (error) {
-        return errorResponse(error);
+        return formatErrorResponse(error);
     }
 };

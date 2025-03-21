@@ -25,12 +25,23 @@ export async function generateLookupHash(apiKey) {
  */
 async function fetchApikeyByLookupHash(lookupHash) {
     logger.trace("fetchApikeyByLookupHash:", lookupHash);
-    const apikeyRecord = await Apikey.getByLookupHash(lookupHash);
-
-    if (hasExpiredDate(apikeyRecord.expires_at)) {
-        const newError = new Error();
-        Object.assign(newError, predefinedError('ApiKeyExpired'));
-        newError.details = {apikey_id: `${apikeyRecord?.id}.${lookupHash}`, expired_at: apikeyRecord.expires_at};
+    let apikeyRecord;  // Declare before try block
+    try{
+        apikeyRecord = await Apikey.getByLookupHash(lookupHash);
+    } catch (error) {
+        const newError = predefinedError('Apikey.getByLookupHash');
+        newError.code = error.code;
+        newError.details = {sql_error: error.message};
+        newError.message = "Internal Error: Unable to validate access_token at this time.";
+        throw newError;
+    }
+    
+    // Verify ApiKey is not expired
+    if ( hasExpiredDate(apikeyRecord?.expires_at) ) {
+        const newError = predefinedError('ApiKeyExpired');
+        if (apikeyRecord?.expires_at) {
+            newError.details.trace = {apikey_id: `${apikeyRecord?.id}.${lookupHash}`, expired_at: apikeyRecord?.expires_at};
+        }
         throw newError;
     };
 

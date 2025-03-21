@@ -11,6 +11,7 @@ export const __functionName = () => {
  * @returns bool
  */
 export function hasExpiredDate(date) {
+    if (!date) return true;
     const givenDate = new Date(date);
     const now = new Date();
     

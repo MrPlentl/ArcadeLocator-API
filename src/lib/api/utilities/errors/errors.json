@@ -12,18 +12,14 @@
         "code": 4002,
         "httpStatusCode": 401,
         "type": "Unauthorized",
-        "message": "ApiKey has Expired. Generate a new ApiKey.",
+        "message": "ApiKey is invalid.",
         "details": {
-            "expired": "apiKey"
+            "bad_apikey": "The apiKey you are using is invalid or has Expired. Generate a new ApiKey from your profile."
         }
     },
     "Apikey.getByLookupHash": {
-        "code": 5001,
         "httpStatusCode": 500,
         "type": "Sql Error",
-        "message": "An error occured while fetching the apikey. Please try again later and contact Support if the problem presists.",
-        "details": {
-            "sql_error": "Unable to locate the apiKey to validate the user."
-        }
+        "message": "Internal Error: An error occured while fetching the apikey. Please try again later and contact Support if the problem presists."
     }
 }
