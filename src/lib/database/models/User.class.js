@@ -73,6 +73,54 @@ class User {
     return rows[0] || null;
   }
 
+  // READ user matching the id
+  static async getByApikeyId(apikeyId) {
+    logger.trace("getByApikeyId:", apikeyId);
+    const { rows } = await pool.query(`SELECT * FROM users WHERE apikey_id = $1 AND is_suspended IS false`, [apikeyId]);
+
+    // Validate that the apikey on a user exists
+    if ( !rows.length ) {
+      throw Object.assign(new Error(`User does not exist with the provided apiKey!`), { code: 400, httpStatusCode: 400});
+    }
+
+    return rows[0] || null;
+  }
+
+  // READ user matching the id
+  static async getPermissionsById(id) {
+    logger.trace("getPermissionsById:", id);
+    const { rows } = await pool.query(`SELECT p.permission_name
+                                        FROM users u
+                                        JOIN user_roles ur ON u.id = ur.user_id
+                                        JOIN roles r ON ur.role_id = r.id
+                                        JOIN role_permissions rp ON r.id = rp.role_id
+                                        JOIN permissions p ON rp.permission_id = p.id WHERE u.id = $1`, [id]);
+
+    // Validate that the apikey on a user exists
+    if ( !rows.length ) {
+      throw Object.assign(new Error(`User does not exist with id: ${id}`), { code: 400, httpStatusCode: 400});
+    }
+
+    return rows.map(p => p.permission_name) || null;
+  }
+
+  // READ user matching the id
+  static async getRolesById(id) {
+    logger.trace("getRolesById:", id);
+    const { rows } = await pool.query(`SELECT role_name
+                                        FROM user_roles ur
+                                        JOIN roles r ON ur.role_id = r.id
+                                        WHERE ur.user_id = $1
+                                        ORDER BY ur.role_id`, [id]);
+
+    // Validate that the apikey on a user exists
+    if ( !rows.length ) {
+      throw Object.assign(new Error(`User does not have any roles with id: ${id}`), { code: 400, httpStatusCode: 400});
+    }
+
+    return rows.map(role => role.role_name) || null;
+  }
+
   // UPDATE user by id with data
   // ChatGPT
   // https://chatgpt.com/c/67cf3b75-366c-8001-bf75-a51865b832f3
@@ -118,6 +166,8 @@ class User {
     const { rows } = await pool.query("DELETE FROM user WHERE id = $1 RETURNING *", [id]);
     return rows[0] || null;
   }
+
+
 }
 
 export default User;

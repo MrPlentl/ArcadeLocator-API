@@ -1,5 +1,7 @@
 // import env from "../../../utils/environment.js";
-import { authenticateToken } from "../middleware/auth.js";
+import { PERMISSIONS } from "../../utilities/constants.js";
+
+import * as auth from "../middleware/auth.js";
 import { setStdRespHeaders } from "../middleware/index.js";
 import * as controller from '../controller/movie.js';
 
@@ -37,7 +39,6 @@ const createMovie = async (req, res) => {
 const getMovies = async (req, res) => {
     logger.trace("getMovies");
     
-    logger.debug(req?.userToken?.permissions?.apiKey?.canCreate);
     logger.debug(req?.userToken?.role);
     logger.debug(req?.userToken?.userAccess?.accessLevel);
     const [ statusCode, response ] = await controller.fetchAllMovies(req);
@@ -92,27 +93,32 @@ const deleteMovie = async (req, res) => {
 export default {
     getMovies: [
         setStdRespHeaders,
-        authenticateToken,
+        auth.authenticateToken,
+        auth.hasRequiredPermission(PERMISSIONS.READ),
         getMovies
     ],
     getMovieById: [
         setStdRespHeaders,
-        authenticateToken,
+        auth.authenticateToken,
+        auth.hasRequiredPermission(PERMISSIONS.READ),
         getMovieById
     ],
     updateMovieInfo: [
         setStdRespHeaders,
-        authenticateToken,
+        auth.authenticateToken,
+        auth.hasRequiredPermission(PERMISSIONS.MOVIE.UPDATE),
         updateMovieInfo
     ],
     createMovie: [
         setStdRespHeaders,
-        authenticateToken,
+        auth.authenticateToken,
+        auth.hasRequiredPermission(PERMISSIONS.MOVIE.CREATE),
         createMovie
     ],
     deleteMovie: [
         setStdRespHeaders,
-        authenticateToken,
+        auth.authenticateToken,
+        auth.hasRequiredPermission(PERMISSIONS.MOVIE.DELETE),
         deleteMovie
     ]
 };

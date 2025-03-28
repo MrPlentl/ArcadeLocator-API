@@ -55,6 +55,7 @@ export async function validateAdminApiKey (req, res, next) {
  * 
  */
 export function authenticateToken (req, res, next) {
+  logger.debug("authenticateToken");
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   const JWT_SECRET = env.JWT_SECRET;
@@ -74,3 +75,21 @@ export function authenticateToken (req, res, next) {
     next();
   });
 };
+
+/**
+ * Validates the required permissions to access endpoint
+ * 
+ * @param {*} requiredPermission 
+ * @returns 
+ */
+export function hasRequiredPermission(requiredPermission) {
+  return (req, res, next) => {
+    logger.trace("requiredPermission:", requiredPermission);
+    const userPermissions = req?.userToken?.permissions;
+      if (userPermissions.includes(requiredPermission)) {
+        next();
+      } else {
+        return res.status(403).json({ error: "Access denied. Missing the required permission to access." });
+      }
+  };
+}

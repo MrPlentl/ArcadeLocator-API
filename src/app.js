@@ -115,7 +115,7 @@ app.use( eov.middleware(apiV1) );
 
 // @TODO I have no idea what is happening here
 // Create a custom error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // format errors
   res.status(err.status || 500).json({
     message: err.message,

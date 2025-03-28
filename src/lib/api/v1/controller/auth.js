@@ -9,6 +9,7 @@ import { getClientIP } from '../../utilities/helpers.js';
 import * as handler from './handlers/auth.js';
 // import { __functionName } from '../../utilities/helpers.js';
 import Apikey from "../../../database/models/Apikey.class.js";
+import User from "../../../database/models/User.class.js";
 
 import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[controller|auth]"); // Sets up the logger with the [app] string prefix
@@ -53,19 +54,20 @@ export async function generateApiKey(userId) {
  */
 export async function fetchAccessToken(req) {
     logger.trace("fetchAccessToken");
-    const { apiKey } = req.body;
+    const apiKey = req.headers["apikey"];
 
     try {        
         if (!apiKey) throw predefinedError('MissingApiKey');
 
         const apikeyID = await handler.validateApiKey(apiKey); // Validate APIkey in apikey table
         const tokenLife = 3600; // Tokens life is 1 hour (3600 seconds)
-        const payload = {};
-        
-        // @TODO: This needs to be replaced with a real user
-        // If API key is valid, use apikeyID to lookup the User and build a user profile JWT
-        // Defines what actions the user can perform.
-        payload.userAccess = {
+        const jwtPayload = {};
+
+        const user = await User.getByApikeyId(apikeyID);
+        const userPermissions = await User.getPermissionsById(user.id);
+        const userRoles = await User.getRolesById(user.id);
+
+        jwtPayload.userAccess = {
             permissions: {
                 apiKey: {
                     canCreate: true,
@@ -82,27 +84,19 @@ export async function fetchAccessToken(req) {
         //// END USER CREATION ////////////////////////////////
 
         // Standard JWT claims
-        payload.iss = "https://api.arcadelocator.com";                 // (Issuer): Identifies the authority that issued the token.
-        payload.sub = "DisplayName_3";                 // (Subject): The unique identifier for the user.
-        payload.aud = "https://api.arcadelocator.com";                 // (Audience): The intended recipient of the token (e.g., an API).
-        payload.jti = uuidv4();         // (JWT ID): A unique identifier for the token (prevents replay attacks).
+        jwtPayload.iss = "https://api.arcadelocator.com";  // (Issuer): Identifies the authority that issued the token.
+        jwtPayload.sub = user.display_name;                // (Subject): The unique identifier for the user.
+        jwtPayload.aud = "https://api.arcadelocator.com";  // (Audience): The intended recipient of the token (e.g., an API).
+        jwtPayload.jti = uuidv4();                         // (JWT ID): A unique identifier for the token (prevents replay attacks).
 
         // Public Claims
-        payload.ip = getClientIP(req);  //The IP address the token was issued from (for tracking/fraud detection).
-        payload.role = "admin";               // the set of roles that were assigned to the user who is logging in
-        payload.applicationId = "Xlr8rV1";
-        payload.permissions = {
-            apiKey: {
-                canCreate: true,
-                canRead: false,
-                canUpdate: true,
-                canDelete: true,
-            }
-        };
+        jwtPayload.ip = getClientIP(req);  //The IP address the token was issued from (for tracking/fraud detection).
+        jwtPayload.roles = userRoles;               // the set of roles that were assigned to the user who is logging in
+        jwtPayload.applicationId = env.APP_ID;
+        jwtPayload.permissions = userPermissions;
         
         // Generate JWT token
-        const JWT_SECRET = env.JWT_SECRET; // Sign the JWT with the secret in the env file
-        const access_token = jwt.sign(payload, JWT_SECRET, { expiresIn: tokenLife });
+        const access_token = jwt.sign(jwtPayload, env.JWT_SECRET, { expiresIn: tokenLife });
 
         // @TODO: Write to file or cache
 

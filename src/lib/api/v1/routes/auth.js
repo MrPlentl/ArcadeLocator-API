@@ -1,6 +1,6 @@
 // import env from "../../../utils/environment.js";
 import { setStdRespHeaders } from "../middleware/index.js";
-import { validateAdminApiKey } from "../middleware/auth.js";
+import * as auth from "../middleware/auth.js";
 import * as controller from "../controller/auth.js";
 
 import { log4js } from "../../../../utils/log4js.js";
@@ -46,6 +46,13 @@ const createApiKey = async (req, res) => {
 };
 
 export default {
-  createApiKey: [setStdRespHeaders, validateAdminApiKey, createApiKey],
-  getAccessToken: [setStdRespHeaders, getAccessToken],
+  createApiKey: [
+    setStdRespHeaders,
+    auth.validateAdminApiKey,
+    createApiKey
+  ],
+  getAccessToken: [
+    setStdRespHeaders,
+    getAccessToken
+  ],
 };
