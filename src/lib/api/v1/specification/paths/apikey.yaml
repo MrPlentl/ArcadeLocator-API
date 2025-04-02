@@ -1,0 +1,51 @@
+post:
+  tags:
+    - authentication
+  summary: Create a new ApiKey with User ID
+  description: Incoming request to create an Api Key using an apikey
+  operationId: createApiKey
+  x-eov-operation-id: createApiKey
+  x-eov-operation-handler: auth
+  parameters:
+    - name: userId
+      in: path
+      description: User ID to use to assign the new ApiKey
+      required: true
+      schema:
+        type: integer
+        format: int64
+        maximum: 32767
+        minimum: 1
+  responses:
+    200:
+      description: OK
+    400:
+      description: Missing apikey
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error Message
+    401:
+      description: The apikey is invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error Message
+    500:
+      description: Error while trying to add the new Apikey into the table
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error Message

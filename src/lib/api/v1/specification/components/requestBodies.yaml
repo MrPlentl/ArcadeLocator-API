@@ -1,0 +1,14 @@
+Movie:
+  required:
+    - name
+    - year
+  type: object
+  properties:
+    name:
+      type: string
+      description: Name of the movie
+      examples: [Super Mario Bros.]
+    year:          
+      type: integer
+      format: int64
+      examples: [1993]

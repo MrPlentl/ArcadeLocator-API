@@ -1,0 +1,112 @@
+get:
+  tags:
+    - extras
+  summary: Get a list of Video Game Shows
+  description: Collection of shows based on video games
+  x-eov-operation-id: getShows
+  x-eov-operation-handler: show
+  parameters:
+    - name: sortBy
+      in: query
+      description: Sort values that need to be considered for filter
+      required: false
+      explode: true
+      schema:
+        type: string
+        default: id
+        enum:
+          - id
+          - name
+          - year
+  responses:
+    200:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../components/responses.yaml#/Show"
+    400:
+      description: Invalid tag value
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Main error Message
+              errors:
+                type: array
+                description: Error details
+    401:
+      description: Authentication Failure
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error Message
+    403:
+      description: Authentication Failure
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error Message
+post:
+  tags:
+    - extras
+  summary: Create a new show
+  description: Creates a new single show
+  operationId: createShow
+  x-eov-operation-id: createShow
+  x-eov-operation-handler: show
+  responses:
+    200:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: "../components/responses.yaml#/Show"
+    400:
+      description: Invalid ID supplied
+    401:
+      description: Authentication Failure
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error Message
+    403:
+      description: Authentication Failure
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error Message
+    404:
+      description: Show not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: Response status type
+              message:
+                type: string
+                description: Response Message

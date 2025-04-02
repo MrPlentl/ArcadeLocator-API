@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const apiSpec = join(__dirname, 'specification/api.yaml');
+const apiSpec = join(__dirname, 'specification/openapi.yaml');
 
 export default {
     apiSpec,

@@ -1,0 +1,46 @@
+Movies:
+  MovieId:
+    - in: path
+      name: movieId
+      required: true
+      description: ID of movie to return
+      schema:
+        type: integer
+        format: int64
+        maximum: 32767
+        minimum: 1
+  SortBy:
+    name: sortBy
+    description: Sort values that need to be considered for filter
+    required: false
+    explode: true
+    schema:
+      type: string
+      default: id
+      enum:
+        - id
+        - name
+        - year
+Shows:
+  ShowId:
+    - in: path
+      name: showId
+      required: true
+      description: ID of show to work on
+      schema:
+        type: integer
+        format: int64
+        maximum: 32767
+        minimum: 1
+  SortBy:
+    name: sortBy
+    description: Sort values that need to be considered for filter
+    required: false
+    explode: true
+    schema:
+      type: string
+      default: id
+      enum:
+        - id
+        - name
+        - year

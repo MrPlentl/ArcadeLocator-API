@@ -110,7 +110,7 @@ app.use(serverRequestLog('dev')); // Logs to console in 'dev' format
 // Setup express-openapi-validator to use the given OpenAPI Spec to handle requests
 ////////////////////////////////////
 // With auto-wired operation handlers, you don't have to declare your routes!
-// See api.yaml for x-eov-* vendor extensions
+// See openapi.yaml for x-eov-* vendor extensions
 app.use( eov.middleware(apiV1) );
 
 // @TODO I have no idea what is happening here
