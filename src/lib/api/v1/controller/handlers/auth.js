@@ -7,14 +7,14 @@ import { log4js } from "../../../../../utils/log4js.js";
 const logger = log4js.getLogger("[controller|handlers|auth]"); // Sets up the logger with the [app] string prefix
 
 /**
- * Creates a lookup has for the given apiKey that will be used to locate the valid apiKey Hash
+ * Creates a lookup has for the given apikey that will be used to locate the valid apikey Hash
  * 
- * @param {*} apiKey 
+ * @param {*} apikey 
  * @returns 
  */
-export async function generateLookupHash(apiKey) {
+export async function generateLookupHash(apikey) {
     logger.trace("generateLookupHash:", 'apikey-****');
-    return crypto.createHash('sha256').update(apiKey).digest('hex').slice(0, 16);
+    return crypto.createHash('sha256').update(apikey).digest('hex').slice(0, 16);
 }
 
 /**
@@ -49,7 +49,7 @@ async function fetchApikeyByLookupHash(lookupHash) {
 };
 
 /**
- * Validates that the give apiKey is actually a vaild ApiKey by using a lookup hash
+ * Validates that the give apikey is actually a vaild ApiKey by using a lookup hash
  * 
  * @param {*} providedKey 
  * @returns 

@@ -30,7 +30,7 @@ const getAccessToken = async (req, res) => {
  *
  * @param {*} req
  * @param {*} res
- * @returns apiKey The newly created apiKey
+ * @returns apikey The newly created apikey
  */
 const createApiKey = async (req, res) => {
   logger.trace("createApiKey:", req?.body?.admin_apiKey);

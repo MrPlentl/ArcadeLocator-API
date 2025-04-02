@@ -5,7 +5,7 @@
         "type": "Bad Request",
         "message": "The ApiKey is missing from request body",
         "details": {
-            "missing_field": "apiKey"
+            "missing_field": "apikey"
         }
     },
     "ApiKeyExpired": {
@@ -14,7 +14,7 @@
         "type": "Unauthorized",
         "message": "ApiKey is invalid.",
         "details": {
-            "bad_apikey": "The apiKey you are using is invalid or has Expired. Generate a new ApiKey from your profile."
+            "bad_apikey": "The apikey you are using is invalid or has Expired. Generate a new apikey from your profile."
         }
     },
     "Apikey.getByLookupHash": {

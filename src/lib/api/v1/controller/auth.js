@@ -90,11 +90,13 @@ export async function fetchAccessToken(req) {
         jwtPayload.jti = uuidv4();                         // (JWT ID): A unique identifier for the token (prevents replay attacks).
 
         // Public Claims
-        jwtPayload.ip = getClientIP(req);  //The IP address the token was issued from (for tracking/fraud detection).
-        jwtPayload.roles = userRoles;               // the set of roles that were assigned to the user who is logging in
+        jwtPayload.ip = getClientIP(req);                   // The IP address the token was issued from (for tracking/fraud detection).
+        jwtPayload.uuid = user.uuid;                        // (User UUID) The users uuid
+        jwtPayload.roles = userRoles;                       // The set of roles that were assigned to the user who is logging in
         jwtPayload.applicationId = env.APP_ID;
         jwtPayload.permissions = userPermissions;
         
+        jwtPayload.uuid = user.uuid;
         // Generate JWT token
         const access_token = jwt.sign(jwtPayload, env.JWT_SECRET, { expiresIn: tokenLife });
 

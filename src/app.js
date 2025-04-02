@@ -81,7 +81,7 @@ app.use('/', limiter);
 const authenticateRateLimiter = rateLimit({
 	windowMs: 30 * 60 * 1000, // 30 minutes
 	limit: 5, // Limit each IP to 5 requests per time `window` (here, per 30 minutes).
-  message: "Rate Limit Reached, too many requests to authenticate apiKey with server. Please try again in 30 minutes. WARNING: Do not continuously authenticate your Api Key to get a new Auth token. Auth Tokens are valid for 60 minutes.",
+  message: "Rate Limit Reached, too many requests to authenticate apikey with server. Please try again in 30 minutes. WARNING: Do not continuously authenticate your Api Key to get a new Auth token. Auth Tokens are valid for 60 minutes.",
 	standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
 
 });

@@ -630,14 +630,14 @@ paths:
                     description: Response Message
   /token:
     post:
-      description: Incoming request to get an Authentication token using an apiKey
+      description: Incoming request to get an Authentication token using an apikey
       x-eov-operation-id: getAccessToken
       x-eov-operation-handler: auth
       responses:
         200:
           description: OK
         400:
-          description: Missing apiKey
+          description: Missing apikey
           content:
             application/json:
               schema:
@@ -647,7 +647,7 @@ paths:
                     type: string
                     description: Error Message
         401:
-          description: The apiKey is invalid
+          description: The apikey is invalid
           content:
             application/json:
               schema:
@@ -661,7 +661,7 @@ paths:
       tags:
         - authentication
       summary: Create a new ApiKey with User ID
-      description: Incoming request to create an Api Key using an apiKey
+      description: Incoming request to create an Api Key using an apikey
       operationId: createApiKey
       x-eov-operation-id: createApiKey
       x-eov-operation-handler: auth
@@ -679,7 +679,7 @@ paths:
         200:
           description: OK
         400:
-          description: Missing apiKey
+          description: Missing apikey
           content:
             application/json:
               schema:
@@ -689,7 +689,7 @@ paths:
                     type: string
                     description: Error Message
         401:
-          description: The apiKey is invalid
+          description: The apikey is invalid
           content:
             application/json:
               schema:

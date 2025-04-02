@@ -17,7 +17,7 @@ export async function validateAdminApiKey (req, res, next) {
 
   const { admin_apiKey } = req.body;
 
-  // Verify apiKey exists
+  // Verify apikey exists
   if (!admin_apiKey) {
     // 400 Bad Request
     // The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).
@@ -26,7 +26,7 @@ export async function validateAdminApiKey (req, res, next) {
       .json({ error: "{admin_apiKey} missing from request body" });
   }
 
-  // Verify apiKey matches the env file KEYMASTER_API_KEY
+  // Verify apikey matches the env file KEYMASTER_API_KEY
   // NOTE: Currently only the system Admin can create
   if (admin_apiKey !== env.KEYMASTER_API_KEY) { 
     // 401 Unauthorized

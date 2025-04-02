@@ -80,7 +80,7 @@ class User {
 
     // Validate that the apikey on a user exists
     if ( !rows.length ) {
-      throw Object.assign(new Error(`User does not exist with the provided apiKey!`), { code: 400, httpStatusCode: 400});
+      throw Object.assign(new Error(`User does not exist with the provided apikey!`), { code: 400, httpStatusCode: 400});
     }
 
     return rows[0] || null;

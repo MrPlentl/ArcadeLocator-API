@@ -36,10 +36,6 @@ const createShow = async (req, res) => {
  */
 const getShows = async (req, res) => {
     logger.trace("getShows");
-    
-    logger.debug(req?.userToken?.permissions?.apiKey?.canCreate);
-    logger.debug(req?.userToken?.role);
-    logger.debug(req?.userToken?.userAccess?.accessLevel);
     const [ statusCode, response ] = await controller.fetchAllShows(req);
     return res.status(statusCode).send(JSON.stringify(response));
 }
