@@ -35,7 +35,7 @@ tags:
     description: Authentication endpoints for various tasks
   - name: definitions
     description: Operations about user
-  - name: pet
+  - name: TBD
     description: Everything about your Pets
     externalDocs:
       description: Find out more
