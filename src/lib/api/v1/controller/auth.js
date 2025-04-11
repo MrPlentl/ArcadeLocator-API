@@ -59,29 +59,15 @@ export async function fetchAccessToken(req) {
     try {        
         if (!apiKey) throw predefinedError('MissingApiKey');
 
-        const apikeyID = await handler.validateApiKey(apiKey); // Validate APIkey in apikey table
-        const tokenLife = 3600; // Tokens life is 1 hour (3600 seconds)
+        const apikeyID = await handler.validateApiKey(apiKey); // Validate Apikey is in apikey table
+        const tokenLife = 3600; // Token's life is 1 hour (3600 seconds)
         const jwtPayload = {};
 
         const user = await User.getByApikeyId(apikeyID);
         const userPermissions = await User.getPermissionsById(user.id);
         const userRoles = await User.getRolesById(user.id);
 
-        jwtPayload.userAccess = {
-            permissions: {
-                apiKey: {
-                    canCreate: true,
-                    canRead: false,
-                    canUpdate: true,
-                    canDelete: true,
-                }
-            },
-            test: "Testing 123",
-            admin: false,
-            accessLevel: "Minion",
-            apikey_id: apikeyID
-        };
-        //// END USER CREATION ////////////////////////////////
+        // Create JWT Information
 
         // Standard JWT claims
         jwtPayload.iss = "https://api.arcadelocator.com";  // (Issuer): Identifies the authority that issued the token.
@@ -90,13 +76,16 @@ export async function fetchAccessToken(req) {
         jwtPayload.jti = uuidv4();                         // (JWT ID): A unique identifier for the token (prevents replay attacks).
 
         // Public Claims
-        jwtPayload.ip = getClientIP(req);                   // The IP address the token was issued from (for tracking/fraud detection).
-        jwtPayload.uuid = user.uuid;                        // (User UUID) The users uuid
-        jwtPayload.roles = userRoles;                       // The set of roles that were assigned to the user who is logging in
+        jwtPayload.ip = getClientIP(req);                    // The IP address the token was issued from (for tracking/fraud detection).
+        jwtPayload.uuid = user.uuid;                         // (User UUID) The users uuid
+        jwtPayload.roles = userRoles;                        // The set of roles that were assigned to the user who is logging in
+        jwtPayload.accessLevel = userRoles[0].toLowerCase(); // This is supposed to be the userRole if there was only one
         jwtPayload.applicationId = env.APP_ID;
         jwtPayload.permissions = userPermissions;
         
         jwtPayload.uuid = user.uuid;
+        //////////////////////////////////
+        
         // Generate JWT token
         const access_token = jwt.sign(jwtPayload, env.JWT_SECRET, { expiresIn: tokenLife });
 
