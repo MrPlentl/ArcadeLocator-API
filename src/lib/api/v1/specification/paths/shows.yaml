@@ -1,6 +1,6 @@
 get:
   tags:
-    - extras
+    - shows
   summary: Get a list of Video Game Shows
   description: Collection of shows based on video games
   x-eov-operation-id: getShows
@@ -10,7 +10,6 @@ get:
       in: query
       description: Sort values that need to be considered for filter
       required: false
-      explode: true
       schema:
         type: string
         default: id
@@ -62,7 +61,7 @@ get:
                 description: Error Message
 post:
   tags:
-    - extras
+    - shows
   summary: Create a new show
   description: Creates a new single show
   operationId: createShow

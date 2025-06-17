@@ -1,56 +1,74 @@
 Movies:
   Movie:
-    oneOf:
-      - type: object
-        properties: {} # Allows an empty object {}
-      - type: object
-        required:
-          - id
-          - name
-          - year
-        properties:
-          id:
-            type: integer
-            format: int64
-            examples: [10]
-          name:
-            type: string
-            examples: ["Super Mario Bros."]
-          year:
-            type: integer
-            examples: [1993]
-          link_imdb:
-            type: string
-            examples: ["tt0108255"]
-          link_letterboxd:
-            type: string
-            examples: ["super-mario-bros"]
-          link_justwatch:
-            type: string
-            examples: ["super-mario-bros"]
+    type: object
+    required:
+      - id
+      - name
+      - year
+    properties:
+      id:
+        type: integer
+        format: int64
+        examples: [10]
+      name:
+        type: string
+        examples: ["Super Mario Bros."]
+      year:
+        type: integer
+        examples: [1993]
+      link_imdb:
+        type: string
+        examples: ["tt0108255"]
+      link_letterboxd:
+        type: string
+        examples: ["super-mario-bros"]
+      link_justwatch:
+        type: string
+        examples: ["super-mario-bros"]
 Show:
-  oneOf:
-    - type: object
-      properties: {} # Allows an empty object {}
-    - type: object
-      required:
-        - id
-        - name
-        - year
-      properties:
-        id:
-          type: integer
-          format: int64
-          examples: [10]
-        name:
-          type: string
-          examples: ["Super Mario Bros."]
-        year:
-          type: integer
-          examples: [1993]
-        link_imdb:
-          type: string
-          examples: ["tt0108255"]
-        link_justwatch:
-          type: string
-          examples: ["super-mario-bros"]
+  type: object
+  required:
+    - id
+    - name
+    - year
+  properties:
+    id:
+      type: integer
+      format: int64
+      examples: [10]
+    name:
+      type: string
+      examples: ["Super Mario Bros."]
+    year:
+      type: integer
+      examples: [1993]
+    link_imdb:
+      type: string
+      examples: ["tt0108255"]
+    link_justwatch:
+      type: string
+      examples: ["super-mario-bros"]
+Venues:
+  Venue:
+    type: object
+    required:
+      - id
+      - name
+      - slug
+    properties:
+      id:
+        type: integer
+        format: int64
+        examples: [10]
+      name:
+        type: string
+        examples: ["Electric Starship Arcade"]
+      slug:
+        type: string
+        examples: ["electric-starship-arcade"]
+      status:
+        type: string
+        examples: ["Open","Closed", "Unknown"]
+      types:
+        type: string
+        examples: ["Traditional Arcade", "Barcade", "Redemption"]

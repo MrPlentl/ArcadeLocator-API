@@ -2,7 +2,7 @@ parameters:
     $ref: "../components/parameters.yaml#/Movies/MovieId"
 get:
   tags:
-    - extras
+    - movies
   summary: Find movie by ID
   description: Returns a single movie
   operationId: getMovieById
@@ -52,7 +52,7 @@ get:
                 description: Response Message
 patch:
   tags:
-    - extras
+    - movies
   summary: Update movie by ID
   description: Updates a single movie
   operationId: updateMovieInfo
@@ -102,7 +102,7 @@ patch:
                 description: Response Message
 delete:
   tags:
-    - extras
+    - movies
   summary: Delete movie by ID
   description: Deletes a single movie
   operationId: deleteMovie

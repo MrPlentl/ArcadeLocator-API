@@ -1,6 +1,6 @@
 get:
   tags:
-    - extras
+    - movies
   summary: Get a list of Video Game Movies
   description: Collection of movies based on video games
   x-eov-operation-id: getMovies
@@ -52,7 +52,7 @@ get:
                 description: Error Message
 post:
   tags:
-    - extras
+    - movies
   summary: Create a new movie
   description: Creates a new single movie
   operationId: createMovie

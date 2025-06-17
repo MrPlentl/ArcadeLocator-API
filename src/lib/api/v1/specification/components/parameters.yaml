@@ -13,7 +13,6 @@ Movies:
     name: sortBy
     description: Sort values that need to be considered for filter
     required: false
-    explode: true
     schema:
       type: string
       default: id
@@ -36,7 +35,6 @@ Shows:
     name: sortBy
     description: Sort values that need to be considered for filter
     required: false
-    explode: true
     schema:
       type: string
       default: id
@@ -44,3 +42,34 @@ Shows:
         - id
         - name
         - year
+VenueSearch:
+  Zip:
+    name: zip
+    description: The zip code to search within.
+    required: false
+    schema:
+      type: integer
+  Distance:
+    name: distance
+    description: The maximum distance (in miles) from the specified zip code.
+    required: false
+    schema:
+      type: integer
+      minimum: 1
+  Name:
+    name: name
+    description: Filter venues by name (case-insensitive substring match).
+    required: false
+    schema:
+      type: string
+Venue:
+  Id:
+    - in: path
+      name: venueId
+      required: true
+      description: ID of venue to return
+      schema:
+        type: integer
+        format: int64
+        maximum: 32767
+        minimum: 1

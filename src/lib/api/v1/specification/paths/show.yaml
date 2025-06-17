@@ -2,7 +2,7 @@ parameters:
     $ref: "../components/parameters.yaml#/Shows/ShowId"
 get:
   tags:
-    - extras
+    - shows
   summary: Find show by ID
   description: Returns a single show
   operationId: getShowById
@@ -52,7 +52,7 @@ get:
                 description: Response Message
 patch:
   tags:
-    - extras
+    - shows
   summary: Update show by ID
   description: Updates a single show
   operationId: updateShowInfo
@@ -102,7 +102,7 @@ patch:
                 description: Response Message
 delete:
   tags:
-    - extras
+    - shows
   summary: Delete show by ID
   description: Deletes a single show
   operationId: deleteShow
