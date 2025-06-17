@@ -16,7 +16,7 @@ info:
   license:
     name: GPLv3
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
-  version: 0.0.30
+  version: 0.0.31
 externalDocs:
   description: Find out more about the Arcade Locator API
   url: http://swagger.io
@@ -28,6 +28,13 @@ servers:
 tags:
   - name: core
     description: Core Operations of the Arcade Locator API
+  - name: movies
+    description: Everything about Movies
+    externalDocs:
+      description: Find more movies to add
+      url: https://letterboxd.com/pillager/list/video-game-movies/
+  - name: shows
+    description: Everything about Shows
   - name: extras
     description: Extra data
   - name: authentication
@@ -49,6 +56,8 @@ tags:
 paths:
   /:
     $ref: "./paths/root.yaml"
+  /apikey/{userId}:
+    $ref: "./paths/apikey.yaml"
   /movies:
     $ref: "./paths/movies.yaml"
   /movie/{movieId}:
@@ -59,5 +68,37 @@ paths:
     $ref: "./paths/show.yaml"
   /token:
     $ref: "./paths/token.yaml"
-  /apikey/{userId}:
-    $ref: "./paths/apikey.yaml"
+  /venue/search:
+    $ref: "./paths/venue_search.yaml"
+  /venue/{venueId}:
+    $ref: "./paths/venue.yaml"
+    # components:
+#   securitySchemes:
+
+#     petstore_auth:
+
+#       type: oauth2
+
+#       flows:
+
+#         implicit:
+
+#           authorizationUrl: http://localhost:8080/identity/token
+
+#           scopes:
+
+#             "write:pets": modify pets in your account
+
+#             "read:pets": read your pets
+
+#     api_key:
+
+#       type: apiKey
+
+#       name: api_key
+
+#       in: header
+
+# ApiKeyAuth:
+
+#   $ref: './components/securitySchemes.yaml#/ApiKeyAuth'
