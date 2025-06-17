@@ -1,0 +1,14 @@
+OAuth2:
+  petstore_auth:
+    type: oauth2
+    flows:
+      implicit:
+        authorizationUrl: http://localhost:8080/identity/token
+        scopes:
+          "write:pets": modify pets in your account
+          "read:pets": read your pets
+ApiKeyAuth:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
