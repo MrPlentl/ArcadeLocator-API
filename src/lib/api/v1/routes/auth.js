@@ -14,16 +14,16 @@ const logger = log4js.getLogger("[routes|auth]"); // Sets up the logger with the
  * @returns access_token The user will use this access_token in order to do anything within the API
  */
 const getAccessToken = async (req, res) => {
-  logger.trace("getAccessToken");
-  const [statusCode, response] = await controller.fetchAccessToken(req);
-  return res.status(statusCode).send(JSON.stringify(response));
+	logger.trace("getAccessToken");
+	const [statusCode, response] = await controller.fetchAccessToken(req);
+	return res.status(statusCode).send(JSON.stringify(response));
 };
 
 /**
  * Create a new API key in the Apikey table
  * Currently using the master KEY in the env file, this needs to be updated to use an Auth Token
  *
- * @TODO 
+ * @TODO
  * - Need to make this route PRIVATE in the documentation
  * - Need to assign the new key to the user record when it is created
  * - The specification limit on the User ID needs to be raised in the event there are more than the listed amount of users
@@ -33,26 +33,21 @@ const getAccessToken = async (req, res) => {
  * @returns apikey The newly created apikey
  */
 const createApiKey = async (req, res) => {
-  logger.trace("createApiKey:", req?.body?.admin_apiKey);
-  logger.trace("user:", req?.params?.userId);
+	logger.trace("createApiKey:", req?.body?.admin_apiKey);
+	logger.trace("user:", req?.params?.userId);
 
-  // # Lookup User (
-  // @TODO: Validate the user exists, is Active and is not Deleted or Suspended
-  // if (user is invalid)
-  // return 401
+	// # Lookup User (
+	// @TODO: Validate the user exists, is Active and is not Deleted or Suspended
+	// if (user is invalid)
+	// return 401
 
-  const [statusCode, response] = await controller.generateApiKey(req?.params?.userId);
-  return res.status(statusCode).send(JSON.stringify(response));
+	const [statusCode, response] = await controller.generateApiKey(
+		req?.params?.userId,
+	);
+	return res.status(statusCode).send(JSON.stringify(response));
 };
 
 export default {
-  createApiKey: [
-    setStdRespHeaders,
-    auth.validateAdminApiKey,
-    createApiKey
-  ],
-  getAccessToken: [
-    setStdRespHeaders,
-    getAccessToken
-  ],
+	createApiKey: [setStdRespHeaders, auth.validateAdminApiKey, createApiKey],
+	getAccessToken: [setStdRespHeaders, getAccessToken],
 };

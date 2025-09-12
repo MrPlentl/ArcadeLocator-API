@@ -17,32 +17,37 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(env[config.use_env_variable], config);
+	sequelize = new Sequelize(env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+	sequelize = new Sequelize(
+		config.database,
+		config.username,
+		config.password,
+		config,
+	);
 }
 console.log(nodeEnv);
 
 // Read models dynamically
 fs.readdirSync(__dirname)
-  .filter((file) => {
-    return (
-      file.indexOf(".") !== 0 &&
-      file !== path.basename(__filename) &&
-      file.slice(-3) === ".js" &&
-      file.indexOf(".test.js") === -1
-    );
-  })
-  .forEach(async (file) => {
-    const modelImport = await import(path.join(__dirname, file));
-    const model = modelImport.default(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+	.filter((file) => {
+		return (
+			file.indexOf(".") !== 0 &&
+			file !== path.basename(__filename) &&
+			file.slice(-3) === ".js" &&
+			file.indexOf(".test.js") === -1
+		);
+	})
+	.forEach(async (file) => {
+		const modelImport = await import(path.join(__dirname, file));
+		const model = modelImport.default(sequelize, Sequelize.DataTypes);
+		db[model.name] = model;
+	});
 
 Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+	if (db[modelName].associate) {
+		db[modelName].associate(db);
+	}
 });
 
 db.sequelize = sequelize;

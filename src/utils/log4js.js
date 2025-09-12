@@ -1,6 +1,6 @@
-import pkg from 'log4js';
+import pkg from "log4js";
 const { configure } = pkg;
-import { log4jsConfig } from '../config/log4js-config.js';
+import { log4jsConfig } from "../config/log4js-config.js";
 
 export const log4js = configure(log4jsConfig);
 

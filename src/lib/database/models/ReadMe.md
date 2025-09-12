@@ -14,7 +14,8 @@ Read
 getAll() → Retrieves all records.
 getById(id) → Fetches a single record by its primary key.
 
------------------------
+---
+
 findOne(condition) → Fetches a single record based on a condition.
 findAll(condition) → Retrieves multiple records based on a condition.
 

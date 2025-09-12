@@ -3,14 +3,14 @@ const logger = log4js.getLogger("[validateDependencies]");
 
 // Cycle through the list of dependencies
 export async function validateDependencies() {
-    logger.trace("[STARTING]");
+	logger.trace("[STARTING]");
 
-    // Check if Extrenal Endpoints are available
+	// Check if Extrenal Endpoints are available
 
-    // Check IO read / write access
+	// Check IO read / write access
 
-    // Check DB access
+	// Check DB access
 
-    logger.info("=== [PASSED] Dependency Validation ===");
-    return true;
+	logger.info("=== [PASSED] Dependency Validation ===");
+	return true;
 }

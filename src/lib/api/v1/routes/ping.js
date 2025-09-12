@@ -1,14 +1,10 @@
 import { exampleMiddleware, setStdRespHeaders } from "../middleware/index.js";
 
-const getPing = (req, res) => { 
-    console.log("PING JS -> WORKING PING NEW!");
-    return res.status(200).send('pong'); 
-}
+const getPing = (req, res) => {
+	console.log("PING JS -> WORKING PING NEW!");
+	return res.status(200).send("pong");
+};
 
 export default {
-    getPing: [
-        exampleMiddleware,
-        setStdRespHeaders,
-        getPing
-    ]
+	getPing: [exampleMiddleware, setStdRespHeaders, getPing],
 };

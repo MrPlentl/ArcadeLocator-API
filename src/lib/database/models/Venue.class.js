@@ -1,73 +1,87 @@
 /**
- * Contains all the standard operations needed on the Venue table 
- * 
+ * Contains all the standard operations needed on the Venue table
+ *
  * @module Venue Operations for the venue table in the Arcade Locator DB
  * @version 0.1
  * @author R. Brandon Plentl <bplentl@gmail.com>
  * @date_inspected April 13, 2025
  */
 import pool from "../connectors/postgres.js";
-import { VALID_MOVIE_FIELDS } from '../constants/validation/index.js';
+import { VALID_MOVIE_FIELDS } from "../constants/validation/index.js";
 
 import { log4js } from "../../../utils/log4js.js";
 const logger = log4js.getLogger("[models|Venue]");
 
 class Venue {
-  // COUNT returns the total record count in the venue table
-  static async count() {
-    const { rows } = await pool.query("SELECT COUNT(*) FROM venue");
-    return parseInt(rows[0].count, 10);
-  }
+	// COUNT returns the total record count in the venue table
+	static async count() {
+		const { rows } = await pool.query("SELECT COUNT(*) FROM venue");
+		return parseInt(rows[0].count, 10);
+	}
 
-  // EXISTS verifies if the record id is in the venue table
-  static async exists(id) {
-    const { rows } = await pool.query("SELECT 1 FROM venue WHERE id = $1", [id]);
-    return rows.length > 0;
-  }
+	// EXISTS verifies if the record id is in the venue table
+	static async exists(id) {
+		const { rows } = await pool.query("SELECT 1 FROM venue WHERE id = $1", [
+			id,
+		]);
+		return rows.length > 0;
+	}
 
-  // @TODO
-  static async validateNameAndYear(id) {
-    const { rows } = await pool.query("SELECT 1 FROM venue WHERE id = $1", [id]);
-    return rows.length > 0;
-  }
+	// @TODO
+	static async validateNameAndYear(id) {
+		const { rows } = await pool.query("SELECT 1 FROM venue WHERE id = $1", [
+			id,
+		]);
+		return rows.length > 0;
+	}
 
-  // CREATE new venue
-  static async create(newVenue) {
-    if (!newVenue?.name) {
-      throw Object.assign(new Error("Venue 'name' is required"), { httpStatusCode: 400});
-    }
+	// CREATE new venue
+	static async create(newVenue) {
+		if (!newVenue?.name) {
+			throw Object.assign(new Error("Venue 'name' is required"), {
+				httpStatusCode: 400,
+			});
+		}
 
-    if (!newVenue?.year) {
-      throw Object.assign(new Error("Venue 'year' is required"), { httpStatusCode: 400});
-    };
+		if (!newVenue?.year) {
+			throw Object.assign(new Error("Venue 'year' is required"), {
+				httpStatusCode: 400,
+			});
+		}
 
-    const venue = {
-        name: newVenue.name,
-        year: newVenue.year,
-        link_imdb: newVenue.link_imdb || null,
-        link_letterboxd: newVenue.link_letterboxd || null,
-        link_justwatch: newVenue.link_justwatch || null
-    };
+		const venue = {
+			name: newVenue.name,
+			year: newVenue.year,
+			link_imdb: newVenue.link_imdb || null,
+			link_letterboxd: newVenue.link_letterboxd || null,
+			link_justwatch: newVenue.link_justwatch || null,
+		};
 
-    const { rows } = await pool.query(
-        "INSERT INTO venue (name, year, link_imdb, link_letterboxd, link_justwatch) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [venue.name, venue.year, venue.link_imdb, venue.link_letterboxd, venue.link_justwatch]
-    );
+		const { rows } = await pool.query(
+			"INSERT INTO venue (name, year, link_imdb, link_letterboxd, link_justwatch) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+			[
+				venue.name,
+				venue.year,
+				venue.link_imdb,
+				venue.link_letterboxd,
+				venue.link_justwatch,
+			],
+		);
 
-    return rows[0];
-  }
+		return rows[0];
+	}
 
-  // READ all venues
-  // TODO: There is no limit on the return which will eventually return a ton of data.
-  // This shouldn't be possible because defaults are set in the controller,
-  // but it can be done inside the code 
-  static async getAll(sqlWhere = null, zipTableName = 'zipdistance05') {
-    logger.trace("getAll -> WHERE:", sqlWhere);
-    logger.trace("getAll -> TABLE:", zipTableName);
+	// READ all venues
+	// TODO: There is no limit on the return which will eventually return a ton of data.
+	// This shouldn't be possible because defaults are set in the controller,
+	// but it can be done inside the code
+	static async getAll(sqlWhere = null, zipTableName = "zipdistance05") {
+		logger.trace("getAll -> WHERE:", sqlWhere);
+		logger.trace("getAll -> TABLE:", zipTableName);
 
-    const where = (sqlWhere) ? `WHERE ${sqlWhere}` : "";
+		const where = sqlWhere ? `WHERE ${sqlWhere}` : "";
 
-    const qry = `
+		const qry = `
       SELECT
         v.id,
         z.destination,
@@ -96,82 +110,124 @@ class Venue {
       ${where}
       ORDER BY z.distance;
     `;
-  
-    const { rows } = await pool.query(qry);
-    return rows;
-  }
 
-  // READ Venue matching the id
-  static async getById(id) {
-    logger.trace("getById:", id);
-    const { rows } = await pool.query(`SELECT * FROM venue WHERE id = $1`, [id]);
+		const { rows } = await pool.query(qry);
+		return rows;
+	}
 
-    // Validate that the venue id exists
-    if ( !rows.length ) {
-      throw Object.assign(new Error(`Venue does not exist with id: ${id}`), { code: 400, httpStatusCode: 400});
-    }
+	// READ Venue matching the id
+	static async getById(id) {
+		logger.trace("getById:", id);
+		const { rows } = await pool.query(`SELECT * FROM venue WHERE id = $1`, [
+			id,
+		]);
 
-    return rows[0] || null;
-  }
+		// Validate that the venue id exists
+		if (!rows.length) {
+			throw Object.assign(
+				new Error(`Venue does not exist with id: ${id}`),
+				{
+					code: 400,
+					httpStatusCode: 400,
+				},
+			);
+		}
 
-  // READ Venue matching the zip
-  static async getByZip(zip) {
-    logger.trace("getByZip:", zip);
-    const { rows } = await pool.query(`SELECT * FROM venue WHERE zip = $1`, [zip]);
+		return rows[0] || null;
+	}
 
-    // Validate that the venue id exists
-    if ( !rows.length ) {
-      throw Object.assign(new Error(`Venue does not exist with id: ${id}`), { code: 400, httpStatusCode: 400});
-    }
+	// READ Venue matching the zip
+	static async getByZip(zip) {
+		logger.trace("getByZip:", zip);
+		const { rows } = await pool.query(
+			`SELECT * FROM venue WHERE zip = $1`,
+			[zip],
+		);
 
-    return rows[0] || null;
-  }
+		// Validate that the venue id exists
+		if (!rows.length) {
+			throw Object.assign(
+				new Error(`Venue does not exist with id: ${id}`),
+				{
+					code: 400,
+					httpStatusCode: 400,
+				},
+			);
+		}
 
-  // UPDATE venue by id with data
-  // ChatGPT
-  // https://chatgpt.com/c/67cf3b75-366c-8001-bf75-a51865b832f3
-  static async update(id, data) {
-    logger.trace("update:", id);
+		return rows[0] || null;
+	}
 
-    // Validate data is passed in
-    const keys = Object.keys(data);
-    if (keys.length === 0) {
-      throw Object.assign(new Error("No fields provided for update"), { code: 400, httpStatusCode: 400});
-    }
+	// UPDATE venue by id with data
+	// ChatGPT
+	// https://chatgpt.com/c/67cf3b75-366c-8001-bf75-a51865b832f3
+	static async update(id, data) {
+		logger.trace("update:", id);
 
-    // Validate the keys being passed in
-    const invalidKeys = keys.filter(key => !VALID_MOVIE_FIELDS.includes(key));
-    if (invalidKeys.length > 0) {
-        console.log("Invalid keys:", invalidKeys);
-        throw Object.assign(new Error(`Invalid fields provided: ${invalidKeys}`), { code: 400, httpStatusCode: 400});
-    }
+		// Validate data is passed in
+		const keys = Object.keys(data);
+		if (keys.length === 0) {
+			throw Object.assign(new Error("No fields provided for update"), {
+				code: 400,
+				httpStatusCode: 400,
+			});
+		}
 
-    // Validate that the venue id exists
-    if ( !await this.exists(id) ) {
-      throw Object.assign(new Error(`Venue does not exist with id: ${id}`), { code: 400, httpStatusCode: 400});
-    }
+		// Validate the keys being passed in
+		const invalidKeys = keys.filter(
+			(key) => !VALID_MOVIE_FIELDS.includes(key),
+		);
+		if (invalidKeys.length > 0) {
+			console.log("Invalid keys:", invalidKeys);
+			throw Object.assign(
+				new Error(`Invalid fields provided: ${invalidKeys}`),
+				{ code: 400, httpStatusCode: 400 },
+			);
+		}
 
-    // Generate dynamic SET clause: "column1 = $1, column2 = $2, ..."
-    const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(", ");
+		// Validate that the venue id exists
+		if (!(await this.exists(id))) {
+			throw Object.assign(
+				new Error(`Venue does not exist with id: ${id}`),
+				{
+					code: 400,
+					httpStatusCode: 400,
+				},
+			);
+		}
 
-    // Values array (ensures correct binding)
-    const values = [...Object.values(data), id];
+		// Generate dynamic SET clause: "column1 = $1, column2 = $2, ..."
+		const setClause = keys
+			.map((key, index) => `${key} = $${index + 1}`)
+			.join(", ");
 
-    const query = `UPDATE venue SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`;
+		// Values array (ensures correct binding)
+		const values = [...Object.values(data), id];
 
-    const { rows } = await pool.query(query, values);
-    return rows[0] || null;
-  }
+		const query = `UPDATE venue SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`;
 
-  // DELETE venue by id
-  static async delete(id) {
-    logger.trace("delete:", id);
-    if ( !await this.exists(id) ) {
-      throw Object.assign(new Error(`Venue does not exist with id: ${id}`), { code: 400, httpStatusCode: 400});
-    }
-    const { rows } = await pool.query("DELETE FROM venue WHERE id = $1 RETURNING *", [id]);
-    return rows[0] || null;
-  }
+		const { rows } = await pool.query(query, values);
+		return rows[0] || null;
+	}
+
+	// DELETE venue by id
+	static async delete(id) {
+		logger.trace("delete:", id);
+		if (!(await this.exists(id))) {
+			throw Object.assign(
+				new Error(`Venue does not exist with id: ${id}`),
+				{
+					code: 400,
+					httpStatusCode: 400,
+				},
+			);
+		}
+		const { rows } = await pool.query(
+			"DELETE FROM venue WHERE id = $1 RETURNING *",
+			[id],
+		);
+		return rows[0] || null;
+	}
 }
 
 export default Venue;
