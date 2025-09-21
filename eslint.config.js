@@ -21,6 +21,9 @@ export default [
 
 			// Optional: ESLint native rule to enforce 2-space indent (in case Prettier isn’t used somewhere)
 			indent: ["error", 4],
+			// Ignore unused function args if they start with "_"
+			"no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+			endOfLine: "auto",
 		},
 	},
 	// Ensure Prettier disables conflicting ESLint formatting rules

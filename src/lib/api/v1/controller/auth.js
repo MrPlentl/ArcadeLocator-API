@@ -10,6 +10,7 @@ import * as handler from "./handlers/auth.js";
 // import { __functionName } from '../../utilities/helpers.js';
 import Apikey from "../../../database/models/Apikey.class.js";
 import User from "../../../database/models/User.class.js";
+import { userTokenCache } from "../../utilities/lruCache.js";
 
 import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[controller|auth]"); // Sets up the logger with the [app] string prefix
@@ -58,61 +59,66 @@ export async function fetchAccessToken(req) {
 
 	try {
 		if (!apiKey) throw predefinedError("MissingApiKey");
+		// Check Cache
+		let userToken = userTokenCache.get(apiKey);
 
-		const apikeyID = await handler.validateApiKey(apiKey); // Validate Apikey is in apikey table
-		const tokenLife = 3600; // Token's life is 1 hour (3600 seconds)
-		const jwtPayload = {};
+		if (!userToken) {
+			logger.trace(`No Cache found for: ${apiKey}`);
 
-		const user = await User.getByApikeyId(apikeyID);
-		const userPermissions = await User.getPermissionsById(user.id);
-		const userRoles = await User.getRolesById(user.id);
+			const apikeyID = await handler.validateApiKey(apiKey);
+			const tokenLife = 3600;
+			const jwtPayload = {};
 
-		// Create JWT Information
+			const user = await User.getByApikeyId(apikeyID);
+			const userPermissions = await User.getPermissionsById(user.id);
+			const userRoles = await User.getRolesById(user.id);
 
-		// Standard JWT claims
-		jwtPayload.iss = "https://api.arcadelocator.com"; // (Issuer): Identifies the authority that issued the token.
-		jwtPayload.sub = user.display_name; // (Subject): The unique identifier for the user.
-		jwtPayload.aud = "https://api.arcadelocator.com"; // (Audience): The intended recipient of the token (e.g., an API).
-		jwtPayload.jti = uuidv4(); // (JWT ID): A unique identifier for the token (prevents replay attacks).
+			// Standard JWT claims
+			jwtPayload.iss = "https://api.arcadelocator.com";
+			jwtPayload.sub = user.display_name;
+			jwtPayload.aud = "https://api.arcadelocator.com";
+			jwtPayload.jti = uuidv4();
 
-		// Public Claims
-		jwtPayload.ip = getClientIP(req); // The IP address the token was issued from (for tracking/fraud detection).
-		jwtPayload.uuid = user.uuid; // (User UUID) The users uuid
-		jwtPayload.roles = userRoles; // The set of roles that were assigned to the user who is logging in
-		jwtPayload.accessLevel = userRoles[0].toLowerCase(); // This is supposed to be the userRole if there was only one
-		jwtPayload.applicationId = env.APP_ID;
-		jwtPayload.permissions = userPermissions;
+			// Public claims
+			jwtPayload.ip = getClientIP(req);
+			jwtPayload.uuid = user.uuid;
+			jwtPayload.roles = userRoles;
+			jwtPayload.accessLevel = userRoles[0].toLowerCase();
+			jwtPayload.applicationId = env.APP_ID;
+			jwtPayload.permissions = userPermissions;
 
-		jwtPayload.uuid = user.uuid;
-		//////////////////////////////////
+			// Generate JWT token
+			const access_token = jwt.sign(jwtPayload, env.JWT_SECRET, {
+				expiresIn: tokenLife,
+			});
 
-		// Generate JWT token
-		const access_token = jwt.sign(jwtPayload, env.JWT_SECRET, {
-			expiresIn: tokenLife,
-		});
+			const refresh_token = "Not Suported";
+			const token_type = "Bearer";
+			const expires_in = tokenLife;
+			const expiration = Math.floor(Date.now() / 1000) + tokenLife;
 
-		// @TODO: Write to file or cache
+			const expirationDate = new Date(expiration * 1000);
 
-		// Additional information for the user to go along side the access_token
-		// origin: ibm
-		const refresh_token = "Not Suported";
-		const token_type = "Bearer";
-		const expires_in = tokenLife;
-		const expiration = Math.floor(Date.now() / 1000) + tokenLife;
-		const scope = env.APP_NAME;
+			const scope = env.APP_NAME;
 
-		// Return access_token
-		return [
-			200,
-			{
+			userToken = {
 				access_token,
 				refresh_token,
 				token_type,
 				expires_in,
 				expiration,
 				scope,
-			},
-		];
+			};
+
+			userTokenCache.set(apiKey, userToken);
+		} else {
+			logger.trace(`Cache found for: ${apiKey}`);
+			userToken.expires_in =
+				userToken.expiration - Math.floor(Date.now() / 1000);
+		}
+
+		// Return the users access_token
+		return [200, userToken];
 	} catch (error) {
 		return formatErrorResponse(error);
 	}

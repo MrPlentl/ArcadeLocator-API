@@ -4,6 +4,9 @@ export const PERMISSIONS = Object.freeze({
 	UPDATE: "update",
 	DELETE: "delete",
 	// Table access
+	ADMIN: {
+		VALIDATE: "admin_validate",
+	},
 	MOVIE: {
 		CREATE: "movie_create",
 		READ: "movie_read",

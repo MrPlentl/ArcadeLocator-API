@@ -1,0 +1,45 @@
+parameters:
+    $ref: "../components/parameters.yaml#/Validate/Action"
+get:
+    tags:
+        - admin
+    summary: Get a list of Video Game Movies
+    description: Collection of movies based on video games
+    x-eov-operation-id: validateAction
+    x-eov-operation-handler: validate
+    responses:
+        200:
+            description: Successful operation
+        400:
+            description: Invalid tag value
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                description: Main error Message
+                            errors:
+                                type: array
+                                description: Error details
+        401:
+            description: Authentication Failure
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            error:
+                                type: string
+                                description: Error Message
+        403:
+            description: Authentication Failure
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            error:
+                                type: string
+                                description: Error message

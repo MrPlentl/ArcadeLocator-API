@@ -1,27 +1,27 @@
 post:
-  description: Incoming request to get an Authentication token using an apikey
-  x-eov-operation-id: getAccessToken
-  x-eov-operation-handler: auth
-  responses:
-    200:
-      description: OK
-    400:
-      description: Missing apikey
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error Message
-    401:
-      description: The apikey is invalid
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error Message
+    description: Incoming request to get an Authentication token using an apikey
+    x-eov-operation-id: getAccessToken
+    x-eov-operation-handler: auth
+    responses:
+        200:
+            description: OK
+        400:
+            description: Missing apikey
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            error:
+                                type: string
+                                description: Error Message
+        401:
+            description: The apikey is invalid
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            error:
+                                type: string
+                                description: Error Message

@@ -24,6 +24,7 @@ import { validateDependencies } from "./utils/validation/validateDependencies.js
 
 // API Specs
 import apiV1 from "./lib/api/v1/index.js";
+import apiAdmin from "./lib/api/admin/index.js";
 
 // Used for writing to the server access log
 import { getAccessLogStream } from "./utils/index.js";
@@ -117,12 +118,16 @@ app.use(serverRequestLog("dev")); // Logs to console in 'dev' format
 ////////////////////////////////////
 // With auto-wired operation handlers, you don't have to declare your routes!
 // See openapi.yaml for x-eov-* vendor extensions
-app.use(eov.middleware(apiV1));
+// Loads the Main and Admin specification files
+app.use([eov.middleware(apiV1), eov.middleware(apiAdmin)]);
 
-// @TODO I have no idea what is happening here
-// Create a custom error handler
-app.use((err, req, res) => {
-	// format errors
+// Catch all 404s
+app.use((req, res, _next) => {
+	res.status(404).json({ message: "Not Found" });
+});
+
+// Error handler (must have 4 args)
+app.use((err, req, res, _next) => {
 	res.status(err.status || 500).json({
 		message: err.message,
 		errors: err.errors,

@@ -1,0 +1,43 @@
+get:
+    tags:
+        - admin
+    summary: Find mismatched games
+    description: Finds the mismatched games and tags them with the appropriate igdb id
+    x-eov-operation-id: findMismatchedGames
+    x-eov-operation-handler: igdb
+    responses:
+        200:
+            description: Successful operation
+        400:
+            description: Invalid tag value
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                description: Main error Message
+                            errors:
+                                type: array
+                                description: Error details
+        401:
+            description: Authentication Failure
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            error:
+                                type: string
+                                description: Error Message
+        403:
+            description: Authentication Failure
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            error:
+                                type: string
+                                description: Error message

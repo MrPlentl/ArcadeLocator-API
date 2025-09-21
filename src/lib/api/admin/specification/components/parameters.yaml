@@ -1,0 +1,12 @@
+Validate:
+    Action:
+        - in: path
+          name: action
+          required: true
+          description: Action to validate
+          schema:
+              type: string
+              default: access
+              enum:
+                  - access
+                  - test
