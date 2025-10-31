@@ -1,78 +1,101 @@
-export const __functionName = () => {
-	// const stackLine = (new Error().stack.split("\n")[2].trim()).split("at ")[1].split(" (")[0];
-	// const functionName = stackLine.split("at ")[1].split(" (")[0];
-	return new Error().stack
-		.split("\n")[2]
-		.trim()
-		.split("at ")[1]
-		.split(" (")[0];
-};
-
 /**
- * Checks the given date and returns true if the date is in the past
+ * Determines whether a given date or timestamp has already passed.
  *
- * @param {*} date
- * @returns bool
+ * Accepts date strings like "2025-09-13 06:37:00" or valid Date objects.
+ * Automatically converts space-separated timestamps to ISO-compatible format.
+ *
+ * @param {string | Date} date - The date or timestamp to evaluate.
+ * @returns {boolean} True if the date is in the past or invalid; otherwise, false.
  */
 export function hasExpiredDate(date) {
 	if (!date) return true;
-	const givenDate = new Date(date);
-	const now = new Date();
 
-	if (givenDate > now) {
-		return false;
-	}
+	// Normalize common SQL-style timestamps ("YYYY-MM-DD HH:mm:ss") to ISO ("YYYY-MM-DDTHH:mm:ss")
+	const dateStr = typeof date === "string" ? date.replace(" ", "T") : date;
 
-	return true;
+	const givenDate = new Date(dateStr);
+	if (isNaN(givenDate)) return true; // invalid date string
+
+	return givenDate < new Date();
 }
 
+/**
+ * Retrieves the client's IP address from an HTTP request object.
+ *
+ * This function first checks the `x-forwarded-for` header (used by proxies or load balancers),
+ * then falls back to the direct socket's remote address.
+ *
+ * @param {import('http').IncomingMessage} req - The HTTP request object.
+ * @returns {string | undefined} The client’s IP address, or `undefined` if unavailable.
+ */
 export const getClientIP = (req) => {
-	return (
-		req.headers["x-forwarded-for"]?.split(",")[0] ||
-		req.connection.remoteAddress
-	);
+	if (!req) return undefined;
+
+	// Check for proxy or load balancer forwarded IPs (comma-separated list)
+	const forwardedFor = req.headers["x-forwarded-for"];
+	if (forwardedFor) {
+		const ip = forwardedFor.split(",")[0].trim();
+		if (ip) return ip;
+	}
+
+	// Fallback: use the direct socket connection address
+	return req.socket?.remoteAddress;
 };
 
 /**
+ * Returns the "length" of a given value in a type-appropriate way.
  *
- * @param {*} value
- * @returns
+ * - Strings and arrays: their `.length`
+ * - Objects: number of enumerable keys
+ * - Maps and Sets: their `.size`
+ * - Numbers: number of digits (excluding minus sign and decimal point)
+ * - Null, undefined, boolean, function, symbol, etc.: 0
+ *
+ * @param {string | number | any[] | object | Map<any, any> | Set<any> | null | undefined} value
+ * @returns {number} The computed length or size of the value.
  */
 export const getLength = (value) => {
-	if (value == null) {
-		// Handles null and undefined
-		return 0;
-	}
+	if (value == null) return 0; // null or undefined
 
 	if (typeof value === "string" || Array.isArray(value)) {
 		return value.length;
+	}
+
+	if (value instanceof Map || value instanceof Set) {
+		return value.size;
 	}
 
 	if (typeof value === "object") {
 		return Object.keys(value).length;
 	}
 
-	if (typeof value === "number") {
-		return value.toString().length;
+	if (typeof value === "number" && !isNaN(value)) {
+		// Count digits only (ignore negative sign and decimal point)
+		return value.toString().replace(/[-.]/g, "").length;
 	}
 
-	// For other types like boolean, function, symbol, etc.
 	return 0;
 };
 
 /**
- * Returns the standard api reponse
+ * Returns a standardized API response as a JSON string.
  *
- * @param {*} resp
- * @returns
+ * If the response contains an `error` property, it returns the original object stringified.
+ * Otherwise, it returns an object with an optional `count` (length of `resp`) and `data`.
+ *
+ * @param {any} resp - The response data or error object.
+ * @param {boolean} [includeCount=true] - Whether to include a `count` property.
+ * @returns {string} The standardized API response as a JSON string.
  */
 export const standardResponse = (resp, includeCount = true) => {
 	if (resp?.error) {
 		return JSON.stringify(resp);
 	}
 
-	return JSON.stringify({
+	const responseObj = {
 		...(includeCount && { count: getLength(resp) }),
-		data: resp,
-	});
+		data: resp ?? null, // ensure data is never undefined
+	};
+
+	return JSON.stringify(responseObj);
 };
