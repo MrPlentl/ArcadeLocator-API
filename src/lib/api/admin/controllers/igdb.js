@@ -4,7 +4,7 @@ import { formatErrorResponse, sqlError } from "../../utils/error.js";
 import { searchGameByName } from "../../../../services/igdb/controller.js";
 
 // Games
-import Game from "../../../../../database/models/Game.js";
+import { Game } from "#dbModels";
 
 export async function findMismatchedGames(req) {
 	logger.trace("findMismatchedGames");

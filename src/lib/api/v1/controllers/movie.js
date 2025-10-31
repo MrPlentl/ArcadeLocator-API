@@ -3,7 +3,7 @@ import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[controller|movie]"); // Sets up the logger with the [app] string prefix
 import { formatErrorResponse, sqlError } from "../../utils/error.js";
 
-import Movie from "../../../../../database/models/Movie.js";
+import { Movie } from "#dbModels";
 
 /**
  * CREATE a new Movie

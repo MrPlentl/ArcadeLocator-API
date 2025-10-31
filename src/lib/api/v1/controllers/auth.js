@@ -8,9 +8,7 @@ import { formatErrorResponse, predefinedError } from "../../utils/error.js";
 import { getClientIP } from "../../utils/helpers.js";
 import * as handler from "./handlers/auth.js";
 // import { __functionName } from '../../utils/helpers.js';
-import Apikey from "../../../../../database/models/Apikey.js";
-
-import User from "../../../../../database/models/User.js";
+import { Apikey, User } from "#dbModels";
 
 import { userTokenCache } from "../../../../utils/lruCache.js";
 

@@ -3,7 +3,7 @@ import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[controller|show]"); // Sets up the logger with the [app] string prefix
 import { formatErrorResponse, sqlError } from "../../utils/error.js";
 
-import Show from "../../../../../database/models/Show.js";
+import { Show } from "#dbModels";
 
 /**
  * CREATE a new Show
