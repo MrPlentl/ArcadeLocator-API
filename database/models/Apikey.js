@@ -1,7 +1,3 @@
-import { log4js } from "../../src/utils/log4js.js";
-const logger = log4js.getLogger("[models|Apikey]"); // Sets up the logger with the [app] string prefix
-
-import pool from "../connectors/postgres.js";
 import { postgres } from "../connectors/index.js";
 class Apikey {
 	// CREATE
@@ -11,23 +7,20 @@ class Apikey {
 	 * @returns
 	 */
 	static async create(newApiKey) {
-		try {
-			if (!newApiKey?.lookup_hash) {
-				throw "Api 'lookup_hash' is required";
-			}
-			if (!newApiKey?.hashed_key) {
-				throw "Api 'hashed_key' is required";
-			}
-
-			const { rows } = await postgres.query(
-				"INSERT INTO apikey (lookup_hash, hashed_key) VALUES ($1, $2) RETURNING *",
-				[newApiKey.lookup_hash, newApiKey.hashed_key],
-			);
-			return rows[0];
-		} catch (error) {
-			logger.error("SQL Error in create:", error);
-			throw error;
+		if (!newApiKey?.lookup_hash) {
+			throw "Api 'lookup_hash' is required";
 		}
+
+		if (!newApiKey?.hashed_key) {
+			throw "Api 'hashed_key' is required";
+		}
+
+		const { rows } = await postgres.query(
+			"INSERT INTO apikey (lookup_hash, hashed_key) VALUES ($1, $2) RETURNING *",
+			[newApiKey.lookup_hash, newApiKey.hashed_key],
+		);
+
+		return rows[0];
 	}
 
 	// READ
@@ -45,31 +38,21 @@ class Apikey {
 
 	// Returns Apikey matching the id
 	static async getById(id) {
-		logger.trace("getById:", id);
-		try {
-			const { rows } = await postgres.query(
-				`SELECT * FROM apikey WHERE id = $1`,
-				[id],
-			);
-			return rows[0] || null; // Returns null if no records are found
-		} catch (error) {
-			logger.error("SQL Error in getById:", error);
-			throw error;
-		}
+		const { rows } = await postgres.query(
+			`SELECT * FROM apikey WHERE id = $1`,
+			[id],
+		);
+
+		return rows[0] || null; // Returns null if no records are found
 	}
 	// Returns Movie matching the id
 	static async getByLookupHash(lookupHash) {
-		logger.trace("getByLookupHash:", lookupHash);
-		try {
-			const { rows } = await postgres.query(
-				`SELECT id, hashed_key, expires_at FROM apikey WHERE lookup_hash = $1`,
-				[lookupHash],
-			);
-			return rows[0] || null; // Returns null if no records are found
-		} catch (error) {
-			logger.error("SQL Error in getByLookupHash:", error);
-			throw error;
-		}
+		const { rows } = await postgres.query(
+			`SELECT id, hashed_key, expires_at FROM apikey WHERE lookup_hash = $1`,
+			[lookupHash],
+		);
+
+		return rows[0] || null; // Returns null if no records are found
 	}
 
 	// @TODO: Need to review

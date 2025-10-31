@@ -9,9 +9,6 @@
 import { postgres } from "../connectors/index.js";
 import { VALID_USER_FIELDS } from "../constants/validation/index.js";
 
-import { log4js } from "../../src/utils/log4js.js";
-const logger = log4js.getLogger("[models|user]");
-
 class User {
 	// COUNT returns the total record count in the user table
 	static async count() {
@@ -69,7 +66,6 @@ class User {
 
 	// READ all users
 	static async getAll(orderBy) {
-		logger.trace("getAll:", orderBy);
 		const { rows } = await postgres.query(
 			`SELECT * FROM user ORDER BY ${orderBy}`,
 		);
@@ -78,7 +74,6 @@ class User {
 
 	// READ user matching the id
 	static async getById(id) {
-		logger.trace("getById:", id);
 		const { rows } = await postgres.query(
 			`SELECT * FROM user WHERE id = $1`,
 			[id],
@@ -100,7 +95,6 @@ class User {
 
 	// READ user matching the id
 	static async getByApikeyId(apikeyId) {
-		logger.trace("getByApikeyId:", apikeyId);
 		const { rows } = await postgres.query(
 			`SELECT * FROM users WHERE apikey_id = $1 AND is_suspended IS false`,
 			[apikeyId],
@@ -119,7 +113,6 @@ class User {
 
 	// READ user matching the id
 	static async getPermissionsById(id) {
-		logger.trace("getPermissionsById:", id);
 		const { rows } = await postgres.query(
 			`SELECT p.permission_name
 				FROM users u
@@ -148,7 +141,6 @@ class User {
 
 	// READ user matching the id
 	static async getRolesById(id) {
-		logger.trace("getRolesById:", id);
 		const { rows } = await postgres.query(
 			`SELECT role_name
                                         FROM user_roles ur
@@ -173,8 +165,6 @@ class User {
 	// ChatGPT
 	// https://chatgpt.com/c/67cf3b75-366c-8001-bf75-a51865b832f3
 	static async update(id, data) {
-		logger.trace("update:", id);
-
 		// Validate data is passed in
 		const keys = Object.keys(data);
 		if (keys.length === 0) {
@@ -223,7 +213,6 @@ class User {
 
 	// DELETE user by id
 	static async delete(id) {
-		logger.trace("delete:", id);
 		if (!(await this.exists(id))) {
 			throw Object.assign(
 				new Error(`User does not exist with id: ${id}`),

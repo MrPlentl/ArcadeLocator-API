@@ -9,9 +9,6 @@
 import { postgres } from "../connectors/index.js";
 import { VALID_MOVIE_FIELDS } from "../constants/validation/index.js";
 
-import { log4js } from "../../src/utils/log4js.js";
-const logger = log4js.getLogger("[models|Venue]");
-
 class Venue {
 	// COUNT returns the total record count in the venue table
 	static async count() {
@@ -78,9 +75,6 @@ class Venue {
 	// This shouldn't be possible because defaults are set in the controller,
 	// but it can be done inside the code
 	static async getAll(sqlWhere = null, zipTableName = "zipdistance05") {
-		logger.trace("getAll -> WHERE:", sqlWhere);
-		logger.trace("getAll -> TABLE:", zipTableName);
-
 		const where = sqlWhere ? `WHERE ${sqlWhere}` : "";
 
 		const qry = `
@@ -119,7 +113,6 @@ class Venue {
 
 	// READ Venue matching the id
 	static async getById(id) {
-		logger.trace("getById:", id);
 		const { rows } = await postgres.query(
 			`SELECT * FROM venue WHERE id = $1`,
 			[id],
@@ -141,7 +134,6 @@ class Venue {
 
 	// READ Venue matching the zip
 	static async getByZip(zip) {
-		logger.trace("getByZip:", zip);
 		const { rows } = await postgres.query(
 			`SELECT * FROM venue WHERE zip = $1`,
 			[zip],
@@ -165,8 +157,6 @@ class Venue {
 	// ChatGPT
 	// https://chatgpt.com/c/67cf3b75-366c-8001-bf75-a51865b832f3
 	static async update(id, data) {
-		logger.trace("update:", id);
-
 		// Validate data is passed in
 		const keys = Object.keys(data);
 		if (keys.length === 0) {
@@ -215,7 +205,6 @@ class Venue {
 
 	// DELETE venue by id
 	static async delete(id) {
-		logger.trace("delete:", id);
 		if (!(await this.exists(id))) {
 			throw Object.assign(
 				new Error(`Venue does not exist with id: ${id}`),

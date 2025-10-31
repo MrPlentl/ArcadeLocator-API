@@ -9,9 +9,6 @@
 import { postgres } from "../connectors/index.js";
 import { VALID_IGDB_FIELDS } from "../constants/validation/index.js";
 
-import { log4js } from "../../src/utils/log4js.js";
-const logger = log4js.getLogger("[models|igdb]");
-
 class Igdb {
 	// COUNT returns the total record count in the igdb table
 	static async count() {
@@ -59,7 +56,6 @@ class Igdb {
 
 	//// READ all igdbs
 	static async getAll(orderBy = "id") {
-		logger.trace("getAll -> Order By:", orderBy);
 		const { rows } = await postgres.query(
 			`SELECT * FROM igdb ORDER BY ${orderBy}`,
 		);
@@ -68,7 +64,6 @@ class Igdb {
 
 	// READ igdb matching the id
 	static async getById(id) {
-		logger.trace("getById:", id);
 		const { rows } = await postgres.query(
 			`SELECT * FROM igdb WHERE id = $1`,
 			[id],
@@ -90,8 +85,6 @@ class Igdb {
 
 	//// UPDATE igdb by id with data
 	static async update(id, data) {
-		logger.trace("update:", id);
-
 		// Validate data is passed in
 		const keys = Object.keys(data);
 		if (keys.length === 0) {
@@ -140,7 +133,6 @@ class Igdb {
 
 	//// DELETE igdb by id
 	static async delete(id) {
-		logger.trace("delete:", id);
 		if (!(await this.exists(id))) {
 			throw Object.assign(
 				new Error(`Igdb does not exist with id: ${id}`),

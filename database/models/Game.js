@@ -7,13 +7,8 @@
  * @date_inspected TBD
  */
 import { postgres } from "../connectors/index.js";
-
 import { VALID_GAME_FIELDS } from "../constants/validation/index.js";
-
 import Igdb from "./Igdb.js";
-
-import { log4js } from "../../src/utils/log4js.js";
-const logger = log4js.getLogger("[models|game]");
 
 class Game {
 	// COUNT returns the total record count in the game table
@@ -80,7 +75,6 @@ class Game {
 
 	// READ all games missing an Igdb id
 	static async getAllGamesMissingIgdbId() {
-		logger.trace("getAllGamesMissingIgdbId");
 		const { rows } = await postgres.query(
 			`SELECT * FROM game WHERE type > 1 AND type < 8 AND igdb_id IS NULL`,
 		);
@@ -89,7 +83,6 @@ class Game {
 
 	// READ all games
 	static async getAll(orderBy = "id") {
-		logger.trace("getAll:", orderBy);
 		const { rows } = await postgres.query(
 			`SELECT * FROM game ORDER BY ${orderBy}`,
 		);
@@ -98,7 +91,6 @@ class Game {
 
 	// READ Game matching the id
 	static async getById(id) {
-		logger.trace("getById:", id);
 		const { rows } = await postgres.query(
 			`SELECT * FROM game WHERE id = $1`,
 			[id],
@@ -122,10 +114,7 @@ class Game {
 	// ChatGPT
 	// https://chatgpt.com/c/67cf3b75-366c-8001-bf75-a51865b832f3
 	static async update(id, data) {
-		logger.trace("update:", id);
-
 		if (data.igdb_id && !(await Igdb.exists(data.igdb_id))) {
-			logger.trace("data.igdb_id:", data.igdb_id);
 			const newIgdb = {
 				id: data.igdb_id,
 				title: data.title,
@@ -146,7 +135,6 @@ class Game {
 			(key) => !VALID_GAME_FIELDS.includes(key),
 		);
 		if (invalidKeys.length > 0) {
-			logger.error("Invalid keys:", invalidKeys);
 			throw Object.assign(
 				new Error(`Invalid fields provided: ${invalidKeys}`),
 				{ code: 400, httpStatusCode: 400 },
@@ -180,7 +168,6 @@ class Game {
 
 	// DELETE game by id
 	static async delete(id) {
-		logger.trace("delete:", id);
 		if (!(await this.exists(id))) {
 			throw Object.assign(
 				new Error(`Game does not exist with id: ${id}`),

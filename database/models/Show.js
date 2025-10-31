@@ -9,9 +9,6 @@
 import { postgres } from "../connectors/index.js";
 import { VALID_SHOW_FIELDS } from "../constants/validation/index.js";
 
-import { log4js } from "../../src/utils/log4js.js";
-const logger = log4js.getLogger("[models|show]");
-
 class Show {
 	// COUNT returns the total record count in the show table
 	static async count() {
@@ -68,7 +65,6 @@ class Show {
 
 	// READ all shows
 	static async getAll(orderBy) {
-		logger.trace("getAll:", orderBy);
 		const { rows } = await postgres.query(
 			`SELECT * FROM show ORDER BY ${orderBy}`,
 		);
@@ -77,7 +73,6 @@ class Show {
 
 	// READ Shows matching the id
 	static async getById(id) {
-		logger.trace("getById:", id);
 		const { rows } = await postgres.query(
 			`SELECT * FROM show WHERE id = $1`,
 			[id],
@@ -101,8 +96,6 @@ class Show {
 	// ChatGPT
 	// https://chatgpt.com/c/67cf3b75-366c-8001-bf75-a51865b832f3
 	static async update(id, data) {
-		logger.trace("update:", id);
-
 		// Validate data is passed in
 		const keys = Object.keys(data);
 		if (keys.length === 0) {
@@ -151,7 +144,6 @@ class Show {
 
 	// DELETE show by id
 	static async delete(id) {
-		logger.trace("delete:", id);
 		if (!(await this.exists(id))) {
 			throw Object.assign(
 				new Error(`Shows does not exist with id: ${id}`),
