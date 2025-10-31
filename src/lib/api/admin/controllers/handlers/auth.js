@@ -4,6 +4,7 @@ import { hasExpiredDate } from "../../../utils/helpers.js";
 import { predefinedError } from "../../../utils/error.js";
 import Apikey from "../../../../../../database/models/Apikey.js";
 import { log4js } from "../../../../../utils/log4js.js";
+
 const logger = log4js.getLogger("[controller|handlers|auth]"); // Sets up the logger with the [app] string prefix
 
 /**
