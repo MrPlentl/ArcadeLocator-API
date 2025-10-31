@@ -1,6 +1,6 @@
 {
 	"verbose": true,
-	"watch": ["./src"],
+	"watch": ["./src", "./database"],
 	"events": {
 		"start": "cls || clear"
 	},
