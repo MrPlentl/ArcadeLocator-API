@@ -7,12 +7,10 @@ import env from "../../../utils/environment.js";
 import { formatErrorResponse, predefinedError } from "../../utils/error.js";
 import { getClientIP } from "../../utils/helpers.js";
 import * as handler from "./handlers/auth.js";
-// import { __functionName } from '../../utils/helpers.js';
 import { Apikey, User } from "#dbModels";
-
 import { userTokenCache } from "../../../../utils/lruCache.js";
-
 import { log4js } from "../../../../utils/log4js.js";
+
 const logger = log4js.getLogger("[controller|auth]"); // Sets up the logger with the [app] string prefix
 
 /**
