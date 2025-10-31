@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: Arcade Locator API
+  description: |-
+    This is a sample Pet Store Server based on the OpenAPI 3.1 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: bplentl@gmail.com
+  license:
+    name: GPLv3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 0.0.38
+externalDocs:
+  description: Find out more about the Arcade Locator API
+  url: http://swagger.io
+servers:
+  - url: /identity
+    description: Base url to handle authentication requests
+  - url: /api/v1
+    description: All API endpoints are relative to the base URL.
+tags:
+  - name: core
+    description: Core Operations of the Arcade Locator API
+  - name: movies
+    description: Everything about Movies
+    externalDocs:
+      description: Find more movies to add
+      url: https://letterboxd.com/pillager/list/video-game-movies/
+  - name: shows
+    description: Everything about Shows
+  - name: extras
+    description: Extra data
+  - name: authentication
+    description: Authentication endpoints for various tasks
+  - name: definitions
+    description: Operations about user
+  - name: TBD
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: venue
+    description: Access to Petstore orders
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: user
+    description: Operations about user
+paths:
+  /:
+    $ref: "./paths/root.yaml"
+  /apikey/{userId}:
+    $ref: "./paths/apikey.yaml"
+  /movies:
+    $ref: "./paths/movies.yaml"
+  /movie/{movieId}:
+    $ref: "./paths/movie.yaml"
+  /shows:
+    $ref: "./paths/shows.yaml"
+  /show/{showId}:
+    $ref: "./paths/show.yaml"
+  /token:
+    $ref: "./paths/token.yaml"
+  /venue/search:
+    $ref: "./paths/venue_search.yaml"
+  /venue/{venueId}:
+    $ref: "./paths/venue.yaml"
+    # components:
+#   securitySchemes:
+#     petstore_auth:
+
+#       type: oauth2
+
+#       flows:
+
+#         implicit:
+
+#           authorizationUrl: http://localhost:8080/identity/token
+
+#           scopes:
+
+#             "write:pets": modify pets in your account
+
+#             "read:pets": read your pets
+
+#     api_key:
+
+#       type: apiKey
+
+#       name: api_key
+
+#       in: header
+
+# ApiKeyAuth:
+
+#   $ref: './components/securitySchemes.yaml#/ApiKeyAuth'

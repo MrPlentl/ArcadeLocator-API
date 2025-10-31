@@ -1,7 +1,7 @@
 // import env from "../../../utils/environment.js";
 import { setStdRespHeaders } from "../middleware/index.js";
 import * as auth from "../middleware/auth.js";
-import * as controller from "../controller/auth.js";
+import * as controller from "../controllers/auth.js";
 
 import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[routes|auth]"); // Sets up the logger with the [app] string prefix

@@ -1,10 +1,10 @@
 // import env from "../../../utils/environment.js";
-import { PERMISSIONS } from "../../utilities/constants.js";
+import { PERMISSIONS } from "../../utils/constants.js";
 
 import * as auth from "../middleware/auth.js";
 import { setStdRespHeaders } from "../middleware/index.js";
-import * as controller from "../controller/venue.js";
-import { standardResponse } from "../../utilities/helpers.js";
+import * as controller from "../controllers/venue.js";
+import { standardResponse } from "../../utils/helpers.js";
 
 import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[routes|venue]"); // Sets up the logger with the [app] string prefix

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import env from "../../../utils/environment.js";
-import * as handler from "../controller/handlers/auth.js";
+import * as handler from "../controllers/handlers/auth.js";
 
 import { log4js } from "../../../../utils/log4js.js";
 const logger = log4js.getLogger("[middleware|auth]"); // Sets up the logger with the [middleware|auth] string prefix
