@@ -6,5 +6,5 @@ npx sequelize-cli seed:generate --name demo-user
 
 npx sequelize-cli db:seed:all
 npx sequelize-cli db:seed:undo
-            npx sequelize-cli db:seed:undo --seed name-of-seed-as-in-data
-            npx sequelize-cli db:seed:undo:all
+npx sequelize-cli db:seed:undo --seed name-of-seed-as-in-data
+npx sequelize-cli db:seed:undo:all

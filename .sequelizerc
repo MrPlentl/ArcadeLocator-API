@@ -1,14 +1,3 @@
-// import { resolve } from 'path';
-// import path from 'path';
-// const { resolve } = path;
-
-// export default {
-//   config: path.resolve('./src/lib/database/config', 'sequelizerc.json'),
-//   'models-path': resolve('./src/lib/database', 'models'),
-//   'seeders-path': resolve('./src/lib/database', 'seeders'),
-//   'migrations-path': resolve('./src/lib/database', 'migrations'),
-// };
-
 const path = require("path");
 
 module.exports = {
