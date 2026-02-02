@@ -23,25 +23,6 @@ async function startServer() {
 	}
 
 	/////////////////////////////////
-	// CLI Argument Parsing
-	/////////////////////////////////
-	// let ctr = 0;
-	// process.argv.forEach((argValue) => {
-	// 	if (ctr > 1) {
-	// 		switch (argValue) {
-	// 			case "runAll":
-	// 				logger.info("runAll=true");
-	// 				break;
-	// 			default:
-	// 				// It is often safer to log a warning rather than crash on unknown args, 
-	// 				// but keeping your logic here:
-	// 				throw new Error(`Unknown Argument Detected => "${argValue}"`);
-	// 		}
-	// 	}
-	// 	ctr++;
-	// });
-
-	/////////////////////////////////
 	// Start HTTP Server
 	/////////////////////////////////
 	const server = createServer(app);

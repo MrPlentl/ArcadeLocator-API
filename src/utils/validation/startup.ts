@@ -1,3 +1,5 @@
+import { printAppInfo } from "./appInfo.js";
+
 import { log4js } from "../../utils/log4js.js"; // log4js is a simple to use log library
 const logger = log4js.getLogger("[validateEnvironment]");
 
@@ -39,11 +41,7 @@ function validateDependencies(): boolean {
 }
 
 export function validateStartup(): boolean {
-	console.log('App Id:',process.env.APP_ID);
-	console.log('Env:',process.env.APP_ENV);
-	console.log('Log Lvl:',process.env.APP_LOG_LEVEL);
-	console.log('Node Env:',process.env.NODE_ENV);
-	console.log('DB Hostname:',process.env.DB_HOSTNAME);
+	printAppInfo();
 
 	logger.trace("[validateStartup]");
 	const isEnvValid: boolean = validateEnvironment();
