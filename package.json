@@ -1,68 +1,69 @@
 {
-	"name": "arcadelocator-api",
-	"version": "0.0.52",
-	"description": "Discover new arcades nearby, see what games that have and checkout what options they have available",
-	"keywords": [
-		"arcade",
-		"video games",
-		"zipcode search",
-		"locator",
-		"arcade information"
-	],
-	"author": "R. Brandon Plentl <bplentl@gmail.com> (http://mrplentl.com)",
-	"homepage": "https://github.com/MrPlentl/ArcadeLocator-API/blob/master/README.md",
-	"bugs": {
-		"url": "https://github.com/MrPlentl/ArcadeLocator-API/issues",
-		"email": "bplentl@gmail.com"
-	},
-	"repository": {
-		"type": "git",
-		"url": "github:MrPlentl/ArcadeLocator-API"
-	},
-	"license": "GPL-3.0",
-	"main": "./src/app.js",
-	"engines": {
-		"node": "^24.x"
-	},
-	"type": "module",
-	"imports": {
-		"#dbModels": "./database/models/index.js"
-	},
-	"scripts": {
-		"start": "node ./src/app.js",
-		"inspect": "nodemon --inspect ./src/app.js",
-		"setversion": "git rev-list --count --all > version",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json}'"
-	},
-	"dependencies": {
-		"axios": "^1.12.2",
-		"bcrypt": "^5.1.1",
-		"bcryptjs": "^3.0.2",
-		"crypto": "^1.0.1",
-		"dotenv": "^16.4.7",
-		"express": "^4.21.2",
-		"express-openapi-validator": "^5.4.6",
-		"express-rate-limit": "^7.5.0",
-		"jsonwebtoken": "^9.0.2",
-		"log4js": "^6.9.1",
-		"lru-cache": "^11.2.1",
-		"morgan": "^1.10.0",
-		"pg": "^8.13.3",
-		"pg-hstore": "^2.3.4",
-		"sequelize": "^6.37.6",
-		"sqlite": "^5.1.1",
-		"sqlite3": "^5.1.7",
-		"uuid": "^11.1.0"
-	},
-	"devDependencies": {
-		"@eslint/js": "^9.21.0",
-		"eslint": "^9.21.0",
-		"eslint-config-prettier": "^10.1.5",
-		"eslint-plugin-prettier": "^5.5.0",
-		"globals": "^16.0.0",
-		"nodemon": "^3.1.9",
-		"prettier": "^3.5.3",
-		"sequelize-cli": "^6.6.2"
-	}
+  "name": "arcadelocator-api-v1",
+  "version": "0.1.0",
+  "description": "Discover new arcades nearby, see what games that have and checkout what options they have available",
+  "keywords": [
+    "arcade",
+    "video games",
+    "zipcode search",
+    "locator",
+    "arcade information"
+  ],
+  "author": "R. Brandon Plentl <bplentl@gmail.com> (http://mrplentl.com)",
+  "homepage": "https://github.com/MrPlentl/ArcadeLocator-API/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/MrPlentl/ArcadeLocator-API/issues",
+    "email": "bplentl@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:MrPlentl/ArcadeLocator-API"
+  },
+  "license": "GPL-3.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --inspect src/index.ts",
+    "build": "tsc && copyfiles -u 1 src/**/*.yaml dist",
+    "start": "node dist/index.js",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write '**/*.{js,jsx,ts,tsx,json}'"
+  },
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.13.4",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-openapi-validator": "^5.6.2",
+    "express-rate-limit": "^8.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "log4js": "^6.9.1",
+    "lru-cache": "^11.2.5",
+    "morgan": "^1.10.1",
+    "pg": "^8.18.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/pg": "^8.16.0",
+    "copyfiles": "^2.4.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.3.0",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.8.1",
+    "sequelize-cli": "^6.6.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
 }

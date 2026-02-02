@@ -1,3 +1,21 @@
+Games:
+    Game:
+        type: object
+        required:
+            - id
+            - title
+            - type
+        properties:
+            id:
+                type: integer
+                format: int64
+                examples: [10]
+            title:
+                type: string
+                examples: ["Pac-Man"]
+            type:
+                type: string
+                examples: ["Arcade"]
 Movies:
     Movie:
         type: object

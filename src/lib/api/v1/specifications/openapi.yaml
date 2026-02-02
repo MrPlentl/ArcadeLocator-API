@@ -16,7 +16,7 @@ info:
   license:
     name: GPLv3
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
-  version: 0.0.54
+  version: 0.0.55
 externalDocs:
   description: Find out more about the Arcade Locator API
   url: http://swagger.io
@@ -58,6 +58,10 @@ paths:
     $ref: "./paths/root.yaml"
   /apikey/{userId}:
     $ref: "./paths/apikey.yaml"
+  /games:
+    $ref: "./paths/games.yaml"
+  /game/{gameId}:
+    $ref: "./paths/game.yaml"
   /movies:
     $ref: "./paths/movies.yaml"
   /movie/{movieId}:

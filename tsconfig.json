@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2020",      
+    "module": "NodeNext",      // Critical for native ESM in Node
+    "moduleResolution": "NodeNext", 
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

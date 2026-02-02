@@ -1,3 +1,18 @@
+Game:
+    required:
+        - name
+        - type
+    type: object
+    properties:
+        name:
+            type: string
+            description: Name of the game
+            examples: [Super Mario Bros.]
+        type:
+            type: integer
+            format: int64
+            description: The id of the type of new game being added
+            examples: [4]
 Movie:
     required:
         - name

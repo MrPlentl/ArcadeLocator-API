@@ -1,3 +1,25 @@
+Games:
+    GameId:
+        - in: path
+          name: gameId
+          required: true
+          description: ID of game to return
+          schema:
+              type: integer
+              format: int64
+              maximum: 32767
+              minimum: 1
+    SortBy:
+        name: sortBy
+        description: Sort values that need to be considered for filter
+        required: false
+        schema:
+            type: string
+            default: id
+            enum:
+                - id
+                - name
+                - year
 Movies:
     MovieId:
         - in: path
