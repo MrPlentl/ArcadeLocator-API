@@ -10,7 +10,7 @@ async function startServer() {
 	logger.info(`[STARTING] ${env.APP_NAME}`);
 
 	/////////////////////////////////
-	// Validate Startup
+	// Validate Startup requirements
 	/////////////////////////////////
 	try {
 		if (!validateStartup()) {
