@@ -1,7 +1,7 @@
-import { configure } from "log4js";
+import pkgLog4js from "log4js";
 import { log4jsConfig } from "../config/log4js-config.js";
 
-export const log4js = configure(log4jsConfig);
+export const log4js = pkgLog4js.configure(log4jsConfig);
 
 // # Documentation
 // const logger = log4js.getLogger("[index]");
